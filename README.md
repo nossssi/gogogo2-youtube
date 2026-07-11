@@ -106,9 +106,6 @@ docs/                      # setup.md(온보딩), flow-image.md(이미지 엔진
 .claude/skills/story-pd/   # Claude 작업 지침(스킬) — 파이프라인의 두뇌
 ```
 
-참고용 완성 예시(텍스트만): `channels/yadam/projects/소금장수/` —
-대본·characters.json·storyboard.json이 실제로 어떤 모양인지 볼 수 있습니다.
-
 새 채널을 만들 때는 `channels/_template/`를 복사해서 시작합니다.
 
 ---

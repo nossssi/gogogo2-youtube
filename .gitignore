@@ -7,19 +7,9 @@
 .env
 channels/*/config/youtube-api/
 
-# ── 개인 작업물: 프로젝트는 기본 전체 제외 ─────────────────
-channels/*/projects/*
+# ── 개인 작업물: 프로젝트는 전체 제외 ──────────────────────
+channels/*/projects/
 renders/
-
-# 예외: 참고용 샘플(소금장수) — 파이프라인 산출물 "형태"를 보여주는
-# 텍스트 파일만 커밋. 미디어(assets/scenes/audio/vrew/output)는 제외 유지.
-!channels/yadam/projects/소금장수/
-channels/yadam/projects/소금장수/*
-!channels/yadam/projects/소금장수/script.txt
-!channels/yadam/projects/소금장수/meta.txt
-!channels/yadam/projects/소금장수/characters.json
-!channels/yadam/projects/소금장수/locations.json
-!channels/yadam/projects/소금장수/storyboard.json
 
 # ── research: 공유 대장(topic_log)·벤치마킹(refs)·제안서는 커밋,
 #    일회성 스캔 리포트는 로컬 ──────────────────────────────

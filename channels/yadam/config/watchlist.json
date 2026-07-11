@@ -1,0 +1,340 @@
+{
+  "_comment": "소재 트렌드 추적 워치리스트 (youtube_finder에서 2026-07-11 등록, 구독자 많은 순). scan_channels.py가 읽는다. url 또는 @handle 사용 가능.",
+  "defaults": {
+    "days": 30,
+    "limit_per_channel": 15,
+    "min_minutes": 10
+  },
+  "channels": [
+    {
+      "url": "https://www.youtube.com/channel/UCJiePgRTXdUHMFIr577IB6g",
+      "name": "야담집",
+      "note": "트렌디 · 구독 88,300 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCaApUIdlWO-BilVTBMLO8eg",
+      "name": "드라마사연",
+      "note": "트렌디 · 구독 57,100 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCIrAryWcOnjjiRCNvZ1TF6w",
+      "name": "오늘도좋은밤",
+      "note": "트렌디 · 구독 49,900 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCT57FYHDidN7DREm-ItSuqA",
+      "name": "전해들은 야담",
+      "note": "트렌디 · 구독 32,700 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCNyQVIoDjRK6bSZLDLyzPlg",
+      "name": "밤마실야담",
+      "note": "내 구독 목록 · 구독 31,100 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCAKHG2pWK7LmmH5PwWtbiFg",
+      "name": "조선야담꾼",
+      "note": "★playbook v2 벤치마크 · 내 구독 목록 · 구독 29,200 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCcV_SLaGHK9ifJEVv5UiMew",
+      "name": "송림야담",
+      "note": "★playbook v2 벤치마크 · 트렌디 · 구독 25,300 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCyULZWfiP27XjXxYcg6c3iA",
+      "name": "야담헌",
+      "note": "트렌디 · 구독 22,600 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC8g35mvilidLYiWVvftb93A",
+      "name": "달이야담",
+      "note": "트렌디 · 구독 22,400 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCPvs2lSeGGS4CV-vsgBPCQQ",
+      "name": "목단야담",
+      "note": "트렌디 · 구독 22,400 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCyvjQQbqTKeSm_fy6Sfgciw",
+      "name": "밤의설화 공식",
+      "note": "트렌디 · 구독 21,300 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC0SB64lKf9GWMOakE6KNGEA",
+      "name": "조선 야담",
+      "note": "트렌디 · 구독 20,600 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCueh-e4ZWsAlZRlw9E1AapA",
+      "name": "별하의 조선야담",
+      "note": "트렌디 · 구독 18,600 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCpzwPLTXwJAwu0wbFplcyNQ",
+      "name": "야담마을",
+      "note": "트렌디 · 구독 18,400 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UChczrPnaju9mGqxJXMGVX8Q",
+      "name": "산골야담",
+      "note": "트렌디 · 구독 18,300 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCt077dOvu2mLQN7lFTZLOOg",
+      "name": "인생대첩",
+      "note": "트렌디 · 구독 18,300 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCrmDMkdlnRcsAu7L9deADCQ",
+      "name": "재벌집사연극장",
+      "note": "트렌디 · 구독 18,100 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC3fU_1_IHu6oUVVKUF-fq7w",
+      "name": "굿밤야담",
+      "note": "트렌디 · 구독 17,500 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCI2uCKOkQvxEC7kzNiB68sQ",
+      "name": "파랑새야담",
+      "note": "내 구독 목록 · 구독 16,900 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC_5Xm81nTsHl4pfGSwdYqUw",
+      "name": "월하야담",
+      "note": "트렌디 · 구독 16,500 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UChHZJeevxi8143JcFM43lqg",
+      "name": "퇴근길독백",
+      "note": "트렌디 · 구독 16,300 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC7Dx8s1iF2SwQTOlMq5K-ig",
+      "name": "옛날이야기",
+      "note": "트렌디 · 구독 16,200 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC6XNR-mQmICyLDDDBQbpxxg",
+      "name": "조선 야담집",
+      "note": "트렌디 · 구독 15,400 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCRQz93yV3oXKaXZfngj_diw",
+      "name": "아랫목야담꾼",
+      "note": "트렌디 · 구독 14,400 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCvuVKKtIXIxffrvoLTTjcRw",
+      "name": "가인야담",
+      "note": "트렌디 · 구독 12,900 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCkuCZHDpOS0LqBkPUpBa5NA",
+      "name": "꼬마야담",
+      "note": "내 구독 목록 · 구독 12,800 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCqP2ZKWY1bVXOlcffPyB9tQ",
+      "name": "조선제일야담",
+      "note": "트렌디 · 구독 12,600 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCVhpoD8jZU1r98OsNNpeNWA",
+      "name": "천년전설야담사",
+      "note": "트렌디 · 구독 12,500 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCQPhpMwrBD4UfuEjyW5-oeg",
+      "name": "조선업보록",
+      "note": "트렌디 · 구독 11,600 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCkiulJOEQwZgFdHExnrW5YA",
+      "name": "황도야담",
+      "note": "★playbook v2 벤치마크 · 트렌디 · 구독 11,400 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCJIoGPs4zCNRKhIx_I0Oxjw",
+      "name": "복많이받으세요 야담",
+      "note": "트렌디 · 구독 10,800 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCiTBBpBmRnR54hLXj5LtQVQ",
+      "name": "소월야담",
+      "note": "트렌디 · 구독 10,500 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCA0XlekSYQ9ZsS2-wdl0GiA",
+      "name": "시니어오픈북",
+      "note": "트렌디 · 구독 10,100 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCvW-efvzyTO01opeyCWSkpg",
+      "name": "달빛야담",
+      "note": "트렌디 · 구독 9,350 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCXhD92yun-rimvVCP6cLGhw",
+      "name": "혜뚝야담",
+      "note": "트렌디 · 구독 8,630 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCyiBBQvrF1-7MjISrd7oXCg",
+      "name": "뚱이야담",
+      "note": "★playbook v2 벤치마크 · 트렌디 · 구독 8,430 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCn3IlbuVTSW34l-MP3RuDRQ",
+      "name": "달빛잠자리이야기",
+      "note": "트렌디 · 구독 8,290 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC3Jq33v0JtmWw7PcRmye6_g",
+      "name": "야담재인",
+      "note": "트렌디 · 구독 8,260 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC1fvS93pNotD7P43lATHMOg",
+      "name": "옛날이야기 보따리",
+      "note": "트렌디 · 구독 7,650 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC932jRu9zsWkJcx0TxaWgNw",
+      "name": "뒷골목 야담",
+      "note": "트렌디 · 구독 7,510 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCPF2zXlAOqMGjT0rMuxabBQ",
+      "name": "백제야담",
+      "note": "트렌디 · 구독 7,320 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC3FMKyCPX-Pj33e_34I1nRw",
+      "name": "손녀야담",
+      "note": "★playbook v2 벤치마크 · 내 구독 목록 · 구독 7,170 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCTugu3zXia_FMIvqy-BiZTg",
+      "name": "소원야담",
+      "note": "내 구독 목록 · 구독 7,030 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCbk1Idboh0qfQ2euy8WFmIA",
+      "name": "팔도야담방",
+      "note": "트렌디 · 구독 6,600 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC_Vj_8vcPsUR4ZjY7p5SusA",
+      "name": "명품야담",
+      "note": "트렌디 · 구독 6,200 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCeCV4n3wm1c1_TVxjpYCrXw",
+      "name": "옛날 옛적에 한국 이야기",
+      "note": "내 구독 목록 · 구독 6,010 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCi8d2XlECUswIlAgau5VQVg",
+      "name": "야담화원",
+      "note": "트렌디 · 구독 5,910 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCOlS5leCgyaHUWNWyP7UR2A",
+      "name": "소망야담",
+      "note": "트렌디 · 구독 5,890 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCvJFSsbkUoKZfSllNb5BY_g",
+      "name": "은솔야담",
+      "note": "트렌디 · 구독 5,770 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCGRT47eVm_TIRWhcbpuGS5w",
+      "name": "한빛야담",
+      "note": "트렌디 · 구독 5,640 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCdx8_M0fLtYpQDnYY-ALWRg",
+      "name": "솔잎야담",
+      "note": "트렌디 · 구독 5,450 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCgkGiGnTzi1jUVRxgMdzXIA",
+      "name": "야담이야기",
+      "note": "트렌디 · 구독 4,620 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC57hZQPAAHPx7wjMBg-1bPQ",
+      "name": "야담동무",
+      "note": "트렌디 · 구독 4,280 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCv4lQoK5ZJHGVx415-NiDpQ",
+      "name": "보배야담",
+      "note": "트렌디 · 구독 4,190 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCt-4gtMHr5Yq155P3ozBVXg",
+      "name": "조선야담창고",
+      "note": "트렌디 · 구독 4,040 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC73zFfoYT0sh7r7NEXBtRaQ",
+      "name": "소원야담",
+      "note": "트렌디 · 구독 4,000 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCVMXJxXY9NB0K8EbxfxpFug",
+      "name": "천일설화 야담",
+      "note": "트렌디 · 구독 3,930 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCh9mAn3AH-56_Zrh4C12mqw",
+      "name": "노을야담",
+      "note": "트렌디 · 구독 3,790 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCJZCMLgeE5K1IwCp3IkfLCw",
+      "name": "달빛명월야담",
+      "note": "트렌디 · 구독 3,570 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCIPb5tnAUyWsdj4zNSq11RQ",
+      "name": "채월야담",
+      "note": "트렌디 · 구독 3,490 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCJb10-j_C3fcBmtNwHAEIXg",
+      "name": "담담소담 민담",
+      "note": "내 구독 목록 · 구독 2,950 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCfi7icDy6BbnNOqtIeli2xQ",
+      "name": "달토끼야담",
+      "note": "트렌디 · 구독 2,650 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCGo35ehMZw72OB2dihaI_1w",
+      "name": "매화야담길",
+      "note": "트렌디 · 구독 2,610 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UCKHHCz2yjmlnFjdkl7SAxrA",
+      "name": "야담고을",
+      "note": "트렌디 · 구독 2,550 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC2Sbs8CSruFUQGhKXWAMzsQ",
+      "name": "야담방앗간",
+      "note": "트렌디 · 구독 1,300 (2026-06 기준)"
+    },
+    {
+      "url": "https://www.youtube.com/channel/UC98w-QfWGojXQf6Zh4oMoog",
+      "name": "화수분야담",
+      "note": "트렌디 · 구독 896 (2026-06 기준)"
+    }
+  ]
+}

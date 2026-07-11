@@ -1,0 +1,322 @@
+#!/usr/bin/env python3
+"""
+Flow 이미지 생성 클라이언트 — labs.google Flow 내부 API(aisandbox-pa)로 무료 생성.
+
+flow_token_server.py(상주 데몬)에서 access token + reCAPTCHA 토큰을 받아
+  uploadImage(참조 이미지들 → mediaId)  →  flowMedia:batchGenerateImages(Nano Banana Pro)
+를 호출하고 결과 이미지를 out_path 에 저장한다. API 키 불필요.
+
+generate_image.py 의 engine=="flow" 경로에서 import 되어 run() 이 호출된다.
+단독 실행도 가능:
+    python3 scripts/image/flow_client.py <prompt_file> <out.png> [ref1 ref2 ...] [--model banana-pro] [--ratio 16:9]
+
+의존성: 표준 라이브러리만. Chrome + flow_token_server 데몬 + 확장 필요.
+"""
+import argparse
+import base64
+import hashlib
+import json
+import pathlib
+import sys
+import time
+import urllib.error
+import urllib.request
+
+ENDPOINT_BASE = "https://aisandbox-pa.googleapis.com/v1"
+
+MODELS = {
+    "imagen4": "IMAGEN_3_5",
+    "banana": "NARWHAL",
+    "banana2": "NARWHAL",
+    "banana-pro": "GEM_PIX_2",
+}
+ASPECT_MAP = {
+    "1:1": "IMAGE_ASPECT_RATIO_SQUARE",
+    "16:9": "IMAGE_ASPECT_RATIO_LANDSCAPE",
+    "9:16": "IMAGE_ASPECT_RATIO_PORTRAIT",
+    "4:3": "IMAGE_ASPECT_RATIO_LANDSCAPE_FOUR_THREE",
+    "3:4": "IMAGE_ASPECT_RATIO_PORTRAIT_THREE_FOUR",
+}
+
+UPLOAD_CACHE_FILE = pathlib.Path.home() / ".flow-proxy" / "uploads.json"
+UPLOAD_CACHE_TTL_MS = 6 * 3600 * 1000  # mediaId 재사용 유효기간(보수적 6시간)
+
+
+class FlowError(RuntimeError):
+    pass
+
+
+def _post(url: str, payload: dict, token: str | None = None, timeout: int = 600) -> dict:
+    headers = {"Content-Type": "application/json", "Origin": "https://labs.google"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    req = urllib.request.Request(url, data=json.dumps(payload).encode(), headers=headers, method="POST")
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return json.loads(resp.read())
+
+
+def daemon_token(port: int) -> tuple[str, str | None]:
+    """데몬에서 access token + projectId 획득."""
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/token", timeout=20) as resp:
+            data = json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        body = e.read().decode(errors="replace")
+        raise FlowError(f"토큰 없음: {body}. 확장에서 Connect 했는지 확인.") from e
+    except urllib.error.URLError as e:
+        raise FlowError(
+            f"토큰 데몬(:{port})에 연결 실패 — 먼저 실행: "
+            f"python3 scripts/image/flow_token_server.py --port {port}"
+        ) from e
+    return data["accessToken"], data.get("projectId")
+
+
+def acquire_lane(ports: list[int], timeout: float = 300.0) -> int:
+    """놀고있는 레인(데몬 포트)을 하나 잡아 반환. 전부 바쁘면 대기 후 재시도."""
+    import random
+    deadline = time.time() + timeout
+    order = list(ports)
+    while time.time() < deadline:
+        random.shuffle(order)   # 편중 방지
+        for p in order:
+            try:
+                with urllib.request.urlopen(
+                    urllib.request.Request(f"http://127.0.0.1:{p}/acquire", data=b"{}", method="POST"),
+                    timeout=5,
+                ) as resp:
+                    if json.loads(resp.read()).get("ok"):
+                        return p
+            except urllib.error.URLError:
+                continue   # 이 레인 데몬이 안 떠있음 — 다음 레인
+        time.sleep(1.5)
+    raise FlowError(f"모든 레인이 사용 중/미기동 (ports={ports})")
+
+
+def release_lane(port: int) -> None:
+    try:
+        urllib.request.urlopen(
+            urllib.request.Request(f"http://127.0.0.1:{port}/release", data=b"{}", method="POST"),
+            timeout=5,
+        ).read()
+    except urllib.error.URLError:
+        pass
+
+
+def daemon_recaptcha(port: int) -> str:
+    """데몬 경유로 확장에서 reCAPTCHA 토큰 획득(블로킹)."""
+    try:
+        with urllib.request.urlopen(
+            urllib.request.Request(f"http://127.0.0.1:{port}/get-recaptcha", data=b"{}", method="POST"),
+            timeout=40,
+        ) as resp:
+            data = json.loads(resp.read())
+    except urllib.error.URLError as e:
+        raise FlowError(f"reCAPTCHA 요청 실패(데몬 :{port}): {e}") from e
+    if data.get("error"):
+        raise FlowError(data["error"])
+    return data["token"]
+
+
+def _load_upload_cache() -> dict:
+    try:
+        return json.loads(UPLOAD_CACHE_FILE.read_text())
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def _save_upload_cache(cache: dict) -> None:
+    try:
+        UPLOAD_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        UPLOAD_CACHE_FILE.write_text(json.dumps(cache))
+    except OSError:
+        pass
+
+
+def upload_ref(path: pathlib.Path, token: str, project_id: str, port: int, use_cache: bool = True) -> str:
+    """참조 이미지 업로드 → mediaId. (projectId, 파일 sha256) 캐시로 재업로드 회피."""
+    raw = path.read_bytes()
+    sha = hashlib.sha256(raw).hexdigest()
+    key = f"{project_id}:{sha}"
+    now = int(time.time() * 1000)
+    cache = _load_upload_cache() if use_cache else {}
+    hit = cache.get(key)
+    if hit and hit.get("ts", 0) + UPLOAD_CACHE_TTL_MS > now:
+        return hit["mediaId"]
+
+    data = _post(
+        f"{ENDPOINT_BASE}/flow/uploadImage",
+        {"clientContext": {"projectId": project_id, "tool": "PINHOLE"},
+         "imageBytes": base64.b64encode(raw).decode()},
+        token=token, timeout=120,
+    )
+    media_id = (data.get("media") or {}).get("name")
+    if not media_id:
+        raise FlowError(f"업로드 응답에 mediaId 없음: {json.dumps(data)[:300]}")
+    cache[key] = {"mediaId": media_id, "ts": now}
+    _save_upload_cache(cache)
+    return media_id
+
+
+def batch_generate(prompt: str, image_inputs: list[dict], token: str, project_id: str,
+                   recaptcha: str, model: str, ratio: str, seed: int | None) -> list[dict]:
+    client_ctx = {
+        "recaptchaContext": {"token": recaptcha, "applicationType": "RECAPTCHA_APPLICATION_TYPE_WEB"},
+        "projectId": project_id,
+        "tool": "PINHOLE",
+        "sessionId": ";" + str(int(time.time() * 1000)),
+    }
+    payload = {
+        "clientContext": client_ctx,
+        "mediaGenerationContext": {"batchId": _uuid4()},
+        "useNewMedia": True,
+        "requests": [{
+            "clientContext": client_ctx,
+            "imageModelName": MODELS.get(model, "GEM_PIX_2"),
+            "imageAspectRatio": ASPECT_MAP.get(ratio, "IMAGE_ASPECT_RATIO_LANDSCAPE"),
+            "structuredPrompt": {"parts": [{"text": prompt}]},
+            "seed": seed if seed is not None else _rand_seed(),
+            "imageInputs": image_inputs,
+        }],
+    }
+    data = _post(f"{ENDPOINT_BASE}/projects/{project_id}/flowMedia:batchGenerateImages",
+                 payload, token=token, timeout=600)
+    return extract_images(data)
+
+
+def extract_images(data: dict) -> list[dict]:
+    media = data.get("media")
+    if isinstance(media, list) and media:
+        out = []
+        for item in media:
+            g = (item.get("image") or {}).get("generatedImage") or {}
+            if g.get("fifeUrl"):
+                out.append({"type": "url", "url": g["fifeUrl"]})
+            elif g.get("encodedImage") or g.get("imageBytes"):
+                out.append({"type": "base64", "data": g.get("encodedImage") or g.get("imageBytes")})
+        if out:
+            return out
+    # 레거시 ImageFX 포맷 대비
+    panels = data.get("imagePanels")
+    if panels and panels[0].get("generatedImages"):
+        return [{"type": "base64", "data": im["encodedImage"]} for im in panels[0]["generatedImages"]]
+    raise FlowError(f"응답에서 이미지 추출 실패: {json.dumps(data)[:500]}")
+
+
+def _download(item: dict, timeout: int = 120) -> bytes:
+    if item["type"] == "url":
+        with urllib.request.urlopen(item["url"], timeout=timeout) as resp:
+            return resp.read()
+    return base64.b64decode(item["data"])
+
+
+def run(prompt: str, out_path: pathlib.Path, refs: list[pathlib.Path],
+        model: str = "banana-pro", ratio: str = "16:9", ports: list[int] | int = 3847,
+        seed: int | None = None, max_retries: int = 3) -> int:
+    """flow 경로 진입점. ports가 여러 개면 놀고있는 레인(계정)을 잡아 병렬 처리. 성공 0, 실패 비0."""
+    port_list = [ports] if isinstance(ports, int) else list(ports)
+    # 레인 임대 — 단일 포트면 그 포트, 멀티면 놀고있는 것 하나
+    try:
+        port = acquire_lane(port_list)
+    except FlowError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 2
+    try:
+        return _run_on_port(prompt, out_path, refs, model, ratio, port, seed, max_retries)
+    finally:
+        release_lane(port)
+
+
+def _run_on_port(prompt: str, out_path: pathlib.Path, refs: list[pathlib.Path],
+                 model: str, ratio: str, port: int,
+                 seed: int | None, max_retries: int) -> int:
+    try:
+        token, project_id = daemon_token(port)
+    except FlowError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 2
+    if not project_id:
+        print("error: projectId 미설정 — labs.google Flow 프로젝트 URL의 UUID를 "
+              f"'curl -X POST localhost:{port}/set-project -d \\'{{\"projectId\":\"<UUID>\"}}\\''로 저장하거나 "
+              "확장 Connect 후 재시도.", file=sys.stderr)
+        return 2
+
+    # 참조 이미지 업로드(캐시). 실패해도 ref 없이 진행하지 않고 명확히 실패시킴.
+    try:
+        image_inputs = [{"name": upload_ref(r, token, project_id, port)} for r in refs]
+    except (FlowError, urllib.error.HTTPError, urllib.error.URLError, OSError) as e:
+        print(f"error: 참조 업로드 실패: {e}", file=sys.stderr)
+        return 1
+
+    backoff = 5
+    for attempt in range(1, max_retries + 1):
+        try:
+            recaptcha = daemon_recaptcha(port)
+            images = batch_generate(prompt, image_inputs, token, project_id,
+                                    recaptcha, model, ratio, seed)
+            buf = _download(images[0])
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_bytes(buf)
+            print(f"saved {out_path}  ({out_path.stat().st_size} bytes)  [flow/{model}]")
+            return 0
+        except urllib.error.HTTPError as e:
+            body = e.read().decode(errors="replace")
+            if e.code == 429 and attempt < max_retries:
+                print(f"429 rate limit — {backoff}s 후 재시도 ({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(backoff)
+                backoff *= 2
+                continue
+            print(f"HTTP {e.code} from Flow: {body[:800]}", file=sys.stderr)
+            return 1
+        except FlowError as e:
+            # reCAPTCHA/추출 실패는 일시적일 수 있어 한 번 더
+            if attempt < max_retries:
+                print(f"{e} — 재시도 ({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(backoff)
+                backoff *= 2
+                continue
+            print(f"error: {e}", file=sys.stderr)
+            return 1
+        except (urllib.error.URLError, OSError) as e:
+            print(f"network error: {e}", file=sys.stderr)
+            return 1
+    return 1
+
+
+# ── 결정론 회피용 소도구(표준 random/uuid 사용) ─────────────────────────────
+def _uuid4() -> str:
+    import uuid
+    return str(uuid.uuid4())
+
+
+def _rand_seed() -> int:
+    import random
+    return random.randint(0, 2_147_483_647)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("prompt_file", type=pathlib.Path)
+    ap.add_argument("out_path", type=pathlib.Path)
+    ap.add_argument("refs", nargs="*", type=pathlib.Path)
+    ap.add_argument("--model", default="banana-pro")
+    ap.add_argument("--ratio", default="16:9")
+    ap.add_argument("--ports", default="3847", help="데몬 포트(들). 쉼표구분 멀티계정 레인. 예: 3847,3848,3849")
+    ap.add_argument("--seed", type=int, default=None)
+    args = ap.parse_args()
+    ports = [int(x) for x in str(args.ports).split(",") if x.strip()]
+
+    if not args.prompt_file.exists():
+        print(f"error: prompt file not found: {args.prompt_file}", file=sys.stderr)
+        return 2
+    for r in args.refs:
+        if not r.exists():
+            print(f"error: ref not found: {r}", file=sys.stderr)
+            return 2
+
+    prompt = args.prompt_file.read_text(encoding="utf-8")
+    return run(prompt, args.out_path, list(args.refs),
+               model=args.model, ratio=args.ratio, ports=ports, seed=args.seed)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

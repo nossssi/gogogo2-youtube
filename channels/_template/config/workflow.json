@@ -1,0 +1,5 @@
+{
+  "channel": "채널 이름",
+  "mode": "ask",
+  "_comment": "mode: auto=전체 자동, 결과만 보고 | ask=concept/asset검수/thumbnail만 대화형. story-pd는 ASSET_GEN 검수 게이트를 항상 사람에게 확인한다."
+}

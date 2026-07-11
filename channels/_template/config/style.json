@@ -1,0 +1,9 @@
+{
+  "_comment": "채널 고정 그림체 프리셋. build.py/turnaround.py/background.py가 모든 프롬프트 끝에 preset+negative를 항상 append한다 (cast 유무 무관). 문화/시대 앵커를 여기 박아야 ref 없는 씬이 드리프트하지 않는다.",
+  "preset": "<그림체 + 문화/시대 앵커. 예: Korean folktale illustration ...>",
+  "negative": "No text, no letters, no numbers, no watermark.",
+  "model": "gemini-3-pro-image",
+  "aspect_ratio": "16:9",
+  "max_refs": 5,
+  "max_concurrent": 5
+}

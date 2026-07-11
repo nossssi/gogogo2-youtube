@@ -1,0 +1,418 @@
+{
+  "_meta": "「소금장수」 스토리보드(소스, 사람이 authored). build.py가 cast의 turnaround와 location.sheet를 ref로 붙이고 visual_desc의 {id}를 characters.json lock으로 치환한다. cast는 그 씬 등장 인물만. bokdong은 상태에 따라 bokdong:gaunt / bokdong:healthy.",
+  "scenes": [
+    {
+      "id": 1,
+      "act": "hook",
+      "narration": "\"아저씨, 소금은 비 올 때 파세요.\" 길가에 쓰러질 듯 앉은 거지 아이가, 소금장수에게 건넨 말이었습니다. 소금은 볕 좋은 날 팔아야 합니다. 그런데 하필 비 오는 날 팔라니. 소금장수는 그 말뜻을 알 수 없었습니다. 하지만 그는 아이의 말을 믿어보기로 했습니다. 그날부터 소금을 팔지 않고, 비가 오기만 기다렸습니다.",
+      "cast": [
+        "deoksam",
+        "bokdong:gaunt"
+      ],
+      "location": "market",
+      "visual_desc": "Rainy grey day at a Joseon village market. {deoksam} the salt peddler pauses under the rain, looking down puzzled at {bokdong} the ragged starving beggar boy who sits slumped against a post, looking up and speaking earnestly. Rain streaks, muddy ground, somber mysterious mood.",
+      "sentences": [
+        0,
+        5
+      ]
+    },
+    {
+      "id": 2,
+      "act": "hook",
+      "narration": "사람들은 그런 그를 손가락질했습니다. \"저 사람, 끝내 실성했구먼.\" 하지만 그 거지 아이는 어째서 그런 말을 했을까요. 이야기는 덕삼이 그 아이를 처음 만난 날로, 거슬러 올라갑니다.",
+      "cast": [
+        "deoksam"
+      ],
+      "location": "market",
+      "visual_desc": "{deoksam} stands alone in the rain beside his covered salt baskets, not selling, gazing up at the grey sky waiting. In the blurred background villagers whisper and point at him with mocking faces. Overcast, lonely, a hint of quiet resolve.",
+      "sentences": [
+        6,
+        8
+      ]
+    },
+    {
+      "id": 3,
+      "act": "background",
+      "narration": "전라도 어느 산골 끝자락에, 덕삼이라는 소금장수가 살았습니다. 낮은 초가집 한 칸에서, 늙은 어머니를 모시고 살았습니다. 덕삼은 셈이 느리고 어수룩했습니다. 하지만 사람을 대하는 마음만은, 누구보다 맑고 착했습니다.",
+      "cast": [
+        "deoksam",
+        "mother"
+      ],
+      "location": "hanok",
+      "visual_desc": "A humble poor thatched-roof hanok at the edge of a mountain village at warm dusk. {deoksam} gently helps {mother} his frail elderly mother sit on the wooden porch (maru). Tender warm domestic mood, soft golden light.",
+      "sentences": [
+        9,
+        12
+      ]
+    },
+    {
+      "id": 4,
+      "act": "background",
+      "narration": "새벽 하늘이 밝기도 전에, 덕삼은 지게를 졌습니다. 고갯마루를 넘고 산길을 걸어, 소금을 지고 날랐습니다. 짚신이 닳아 발바닥이 긁혀도, 걸음을 늦추지 않았습니다. 집에 계신 어머니 생각 하나로, 묵묵히 산을 올랐습니다.",
+      "cast": [
+        "deoksam"
+      ],
+      "location": "mountain_path",
+      "visual_desc": "Before dawn, {deoksam} climbs a steep misty pine mountain path, bent under his heavy A-frame jige loaded with salt baskets, straw sandals worn thin. Cold blue pre-dawn light, breath visible, determined and weary.",
+      "sentences": [
+        13,
+        16
+      ]
+    },
+    {
+      "id": 5,
+      "act": "conflict",
+      "narration": "그 장터를 손에 쥐고 흔드는 이가 있었습니다. 박행수였습니다. 큰 상단을 이끄는 자로, 눈빛이 칼처럼 날카로웠습니다. 하지만 덕삼을 대할 때만은, 늘 웃는 낯이었습니다.",
+      "cast": [
+        "bakhaengsu"
+      ],
+      "location": "market",
+      "visual_desc": "{bakhaengsu} the burly wealthy merchant boss stands dominating the busy village market, arms folded, sharp calculating eyes and a faint smug smile, merchants shrinking around him. Imposing, sly atmosphere.",
+      "sentences": [
+        17,
+        20
+      ]
+    },
+    {
+      "id": 6,
+      "act": "conflict",
+      "narration": "\"덕삼아, 오늘도 고생이 많았구나.\" 박행수는 소금을 혀에 얹더니, 이내 고개를 저었습니다. \"빛깔이 탁하고 짠맛이 거칠어. 나 아니면 누가 이걸 사겠나.\" 덕삼은 대꾸할 말을 찾지 못하고, 엽전 몇 닢을 받아 쥐었습니다. 그러고는 되레 고개를 숙였습니다. \"고맙습니다, 행수 어른.\"",
+      "cast": [
+        "deoksam",
+        "bakhaengsu"
+      ],
+      "location": "market",
+      "visual_desc": "At his market stall {bakhaengsu} tastes a pinch of salt and shakes his head dismissively while pressing a few small coins into the hands of {deoksam}, who bows his head gratefully, not realizing he is cheated. Onlookers wince. Cunning vs innocent.",
+      "sentences": [
+        21,
+        24
+      ]
+    },
+    {
+      "id": 7,
+      "act": "conflict",
+      "narration": "그러던 어느 봄날이었습니다. 산길 아래 풀숲에서, 가느다란 신음이 들려왔습니다. 아이 하나가 마른 나뭇가지처럼 쓰러져 있었습니다. 덕삼은 지게를 내던지고, 아이를 품에 안았습니다. \"조금만 참거라. 금방 집에 간다.\"",
+      "cast": [
+        "deoksam",
+        "bokdong:gaunt"
+      ],
+      "location": "mountain_path",
+      "visual_desc": "On a spring mountain path {deoksam} has dropped his jige and kneels to lift {bokdong} the emaciated collapsed boy into his arms. Wildflowers and grass, dappled light, urgent compassionate mood.",
+      "sentences": [
+        25,
+        28
+      ]
+    },
+    {
+      "id": 8,
+      "act": "conflict",
+      "narration": "어머니는 아픈 몸으로 미음을 쑤었습니다. 덕삼은 밤새 젖은 수건으로, 아이의 이마를 닦았습니다. 사흘이 지나서야, 아이는 겨우 눈을 떴습니다. 아이의 이름은 복동이라 했습니다.",
+      "cast": [
+        "deoksam",
+        "mother",
+        "bokdong:gaunt"
+      ],
+      "location": "hanok",
+      "visual_desc": "Night inside the humble hanok room lit by a small oil lamp. {bokdong} the gaunt boy lies under a blanket on the warm floor; {deoksam} wipes the boy's forehead with a wet cloth while {mother} brings a bowl of rice gruel. Warm caring, low amber light.",
+      "sentences": [
+        29,
+        31
+      ]
+    },
+    {
+      "id": 9,
+      "act": "conflict",
+      "narration": "복동은 염전에서 자란 아이였습니다. 할아버지를 따라, 소금 만드는 법과 날씨 읽는 법을 배웠습니다. 하지만 모진 염전 주인 밑에서 할아버지는 세상을 떠났고, 갈 곳 없이 떠돌다, 그만 산길에 쓰러진 것이었습니다.",
+      "cast": [
+        "bokdong:gaunt"
+      ],
+      "location": null,
+      "visual_desc": "A sorrowful memory: {bokdong} the thin boy stands small and alone at the edge of a vast coastal salt-evaporation field (yeomjeon) under a bleak sky, an old grandfather figure faint in the misty distance. Muted melancholy, wide lonely composition.",
+      "sentences": [
+        32,
+        34
+      ]
+    },
+    {
+      "id": 10,
+      "act": "conflict",
+      "narration": "어느 아침, 덕삼이 장에 낼 소금을 고를 때였습니다. 복동이 조용히 다가와 말했습니다. \"아저씨, 그 소금 지금 팔지 마세요.\" \"소금은 비가 올 때 파셔야 해요.\"",
+      "cast": [
+        "deoksam",
+        "bokdong:healthy"
+      ],
+      "location": "hanok",
+      "visual_desc": "In the hanok dirt courtyard {deoksam} crouches sorting salt sacks; {bokdong} the recovered boy stands beside him, small hand raised, speaking with a serious earnest expression beyond his years. Morning light, quiet turning-point mood.",
+      "sentences": [
+        35,
+        36
+      ]
+    },
+    {
+      "id": 11,
+      "act": "conflict",
+      "narration": "\"값이 좋다고 다들 소금을 팔아 버리면요,\" \"정작 소금이 귀해졌을 때, 내놓을 것이 없어져요.\" \"그때는 소금 가진 사람을, 다들 찾아오게 돼요.\" 덕삼은 그 어린 눈빛에서, 거짓을 읽을 수 없었습니다.",
+      "cast": [
+        "deoksam",
+        "bokdong:healthy"
+      ],
+      "location": "hanok",
+      "visual_desc": "Close two-shot in the courtyard: {bokdong} the boy explains gravely with a steady gaze while {deoksam} listens, arms folded, brow furrowed in thought, half-convinced. Intimate, contemplative.",
+      "sentences": [
+        37,
+        37
+      ]
+    },
+    {
+      "id": 12,
+      "act": "conflict",
+      "narration": "복동은 산속 서늘한 동굴을 일러 주었습니다. \"항아리에 숯과 대나무를 깔고 소금을 채우면요,\" \"간수가 빠져 쓴맛이 가시고, 뒷맛이 부드러워져요.\" 그러고는 낡은 은가락지 하나를 내밀었습니다. \"할아버지가 남기신 거예요. 이걸 쓰세요.\"",
+      "cast": [
+        "deoksam",
+        "bokdong:healthy"
+      ],
+      "location": "hanok",
+      "visual_desc": "{bokdong} the boy holds out a small worn silver ring on his palm toward {deoksam}, who looks down startled and moved. In the humble room, tender solemn exchange, soft window light.",
+      "sentences": [
+        38,
+        40
+      ]
+    },
+    {
+      "id": 13,
+      "act": "conflict",
+      "narration": "덕삼은 한참을 망설이다, 조용히 고개를 끄덕였습니다. \"그래, 한번 믿어 보마.\"",
+      "cast": [
+        "deoksam",
+        "bokdong:healthy"
+      ],
+      "location": "hanok",
+      "visual_desc": "{deoksam} places a large gentle hand on {bokdong}'s shoulder and nods with quiet resolve, a faint hopeful smile. The boy looks up. Warm bond, decisive gentle mood.",
+      "sentences": [
+        41,
+        41
+      ]
+    },
+    {
+      "id": 14,
+      "act": "conflict",
+      "narration": "그날부터 덕삼은 소금을 팔지 않고, 동굴에 쟁여 갔습니다. 마을 사람들은 어리석다 비웃었습니다. 하지만 덕삼은 묵묵히, 항아리를 채워 나갔습니다.",
+      "cast": [
+        "deoksam"
+      ],
+      "location": "cave",
+      "visual_desc": "Inside the dim cool cave, {deoksam} carefully pours salt into one of many large earthen jars lined up in rows, lit by faint light from the entrance. Patient solitary labor, quiet determination.",
+      "sentences": [
+        42,
+        43
+      ]
+    },
+    {
+      "id": 15,
+      "act": "conflict",
+      "narration": "복동은 소금을 가마솥에 볶아, 쓴맛을 덜어 냈습니다. 그 소금을 장터 국밥집에, 박행수를 거치지 않고 직접 팔았습니다. 국밥집 주인은 국물에 넣어 보더니, 눈을 크게 떴습니다. \"이거, 맛이 다르구먼.\"",
+      "cast": [
+        "deoksam",
+        "bokdong:healthy"
+      ],
+      "location": "market",
+      "visual_desc": "At a village eatery stall in the market, a soup-shop owner tastes roasted salt from a small dish and raises his eyebrows in surprise; {deoksam} and {bokdong} the boy stand beside their salt sacks, hopeful. Lively hopeful market mood.",
+      "sentences": [
+        44,
+        47
+      ]
+    },
+    {
+      "id": 16,
+      "act": "conflict",
+      "narration": "그 무렵 박행수에게, 큰 거래가 들어왔습니다. 한양의 큰 상단이, 다음 해 여름까지 소금을 대량으로 대라 했습니다. 두둑한 선금에 눈이 먼 박행수는, 곳간에 남겨 둘 소금까지, 죄다 장터에 풀어 버렸습니다. 욕심이 눈을 가리면, 보이지 않는 것이 생기는 법입니다.",
+      "cast": [
+        "bakhaengsu"
+      ],
+      "location": "market",
+      "visual_desc": "{bakhaengsu} greedily clutches a heavy pouch of advance-payment coins, grinning, as porters haul away all his sacks of salt from an emptying storehouse behind him. Greed gleaming in his eyes, warm but ominous light.",
+      "sentences": [
+        48,
+        50
+      ]
+    },
+    {
+      "id": 17,
+      "act": "climax",
+      "narration": "그리고 그해 여름, 하늘에 구멍이라도 난 듯 비가 쏟아졌습니다. 하루가 사흘이 되고, 사흘이 두 달이 되었습니다. 염전은 물에 잠기고, 새 소금은 한 줌도 나오지 않았습니다. 소금값은 그야말로, 무섭게 치솟았습니다.",
+      "cast": [],
+      "location": null,
+      "visual_desc": "A devastating monsoon downpour floods the land: coastal salt fields submerged under grey water, collapsed paddy dikes, torrential rain hammering a drowned village under black clouds. Bleak, overwhelming, cinematic wide shot, no people.",
+      "cta_after": true,
+      "sentences": [
+        51,
+        54
+      ]
+    },
+    {
+      "id": 18,
+      "act": "climax",
+      "narration": "곳간이 텅 빈 박행수의 낯빛이, 사색이 되었습니다. 한양에 보낼 소금도, 장터에 내놓을 소금도 없었습니다. 약조를 어기면, 받은 선금의 몇 배를 물어내야 했습니다.",
+      "cast": [
+        "bakhaengsu"
+      ],
+      "location": "market",
+      "visual_desc": "{bakhaengsu} stands aghast and pale inside his empty warehouse, its shelves bare, clutching his head in dawning panic as rain pours outside the open door. Cold desperate mood, harsh grey light.",
+      "sentences": [
+        55,
+        57
+      ]
+    },
+    {
+      "id": 19,
+      "act": "climax",
+      "narration": "그때 박행수의 귀에, 소문 하나가 들어왔습니다. 어리숙한 덕삼이 산속 동굴에, 소금을 쟁여 뒀다는 것이었습니다. 박행수는 덕삼을 찾아와, 웃는 낯으로 달랬습니다. 하지만 덕삼은 난생처음, 그 부탁을 물리쳤습니다. \"이번에는 제가 직접 팔겠습니다.\"",
+      "cast": [
+        "deoksam",
+        "bakhaengsu"
+      ],
+      "location": "hanok",
+      "visual_desc": "In the rain at the hanok gate, {bakhaengsu} forces a strained coaxing smile toward {deoksam}, who stands firm and calm for the first time, quietly refusing. Rain dripping from the thatched eaves, tense confrontation.",
+      "sentences": [
+        58,
+        62
+      ]
+    },
+    {
+      "id": 20,
+      "act": "climax",
+      "narration": "물러설 박행수가 아니었습니다. 그날 밤, 박행수는 수하들을 이끌고 몰래 동굴로 올랐습니다. 어둠 속에서 항아리를 열어, 소금을 자루에 쏟기 시작했습니다. 바로 그때, 동굴 밖에서 횃불이 일제히 밝아졌습니다. \"멈추거라!\"",
+      "cast": [
+        "bakhaengsu"
+      ],
+      "location": "cave",
+      "visual_desc": "Night raid inside the cave lit by torches: {bakhaengsu} and shadowy hired men pry open the earthen jars and pour salt into sacks, when suddenly bright torchlight floods in from the cave entrance behind them. Tense dramatic chiaroscuro, caught red-handed.",
+      "sentences": [
+        63,
+        66
+      ]
+    },
+    {
+      "id": 21,
+      "act": "climax",
+      "narration": "복동이 낮에 그 뒤를 밟는 자를 보고, 빗속을 뚫고 관아로 달려가, 사또께 고한 것이었습니다. 포졸들이 박행수와 수하들을, 그 자리에서 붙잡았습니다. \"나는 잠깐 빌리려 했을 뿐이오!\" 하지만 한밤중 남의 소금을 옮기던 자의 변명은, 힘이 없었습니다.",
+      "cast": [
+        "bokdong:healthy",
+        "sato"
+      ],
+      "location": null,
+      "visual_desc": "In a torchlit magistrate's hall at night, {bokdong} the boy, soaked from the rain, kneels breathless and pleading before {sato} the seated county magistrate in his official robe. Urgent earnest mood, lantern light.",
+      "cta_after": true,
+      "sentences": [
+        67,
+        68
+      ]
+    },
+    {
+      "id": 22,
+      "act": "resolution",
+      "narration": "이튿날 관아 마당에서, 박행수의 죄가 낱낱이 드러났습니다. 상인을 속여 물건을 빼앗고, 힘으로 위협한 일까지 밝혀졌습니다. 재산의 절반은 몰수되고, 그는 옥에 갇혔습니다. 한양 상단에 물어 줄 빚으로, 남은 재산마저 사라졌습니다. 장터를 쥐고 흔들던 박행수는, 그렇게 무너졌습니다.",
+      "cast": [
+        "sato",
+        "bakhaengsu"
+      ],
+      "location": null,
+      "visual_desc": "Daytime in the magistrate's courtyard: {bakhaengsu} kneels bound and disgraced on the ground while {sato} the magistrate pronounces judgment from a raised seat, constables standing guard. Solemn justice, crowd watching, bright daylight.",
+      "sentences": [
+        69,
+        73
+      ]
+    },
+    {
+      "id": 23,
+      "act": "resolution",
+      "narration": "사또가 덕삼의 소금을 혀에 얹어 보더니, 고개를 끄덕였습니다. \"이런 소금은 처음이로구나. 왕실에 올려도 손색이 없겠다.\" 헐값에 넘기던 소금이, 임금의 수라간에 오른 것이었습니다. 장마 끝에 귀해진 소금은, 내놓기 무섭게 팔려 나갔습니다. 덕삼은 하루아침에, 큰 재물을 손에 쥐었습니다.",
+      "cast": [
+        "deoksam",
+        "sato"
+      ],
+      "location": null,
+      "visual_desc": "{sato} the magistrate tastes a pinch of the fine salt and nods with impressed approval toward {deoksam}, who stands amazed and humbled. In the magistrate's hall, a jar of gleaming salt between them. Dignified, turning-fortune mood.",
+      "sentences": [
+        74,
+        77
+      ]
+    },
+    {
+      "id": 24,
+      "act": "resolution",
+      "narration": "하지만 덕삼이 가장 먼저 한 일은, 따로 있었습니다. 어머니께 드릴 좋은 약재를, 한 보따리 지었습니다. 비 새던 초가지붕을 고치고, 끼니 거른 아이들에게, 따뜻한 밥부터 먹였습니다.",
+      "cast": [
+        "deoksam",
+        "mother"
+      ],
+      "location": "hanok",
+      "visual_desc": "{deoksam} tenderly presents a bundle of medicinal herbs to {mother} his elderly mother on the porch of their now-repaired hanok, fresh thatch on the roof. Warm grateful sunlight, restored home, loving mood.",
+      "sentences": [
+        78,
+        80
+      ]
+    },
+    {
+      "id": 25,
+      "act": "resolution",
+      "narration": "그날 저녁, 덕삼은 복동을 곁에 앉히고 말했습니다. \"복동아, 네가 아니었다면 나는 이 자리에 없었을 거다.\" \"나는 앞으로도, 너와 한집에서 살고 싶구나.\" 떠돌던 복동은 끝내 고개를 숙이고, 울음을 터뜨렸습니다. 어머니가 그 작은 손을 잡았습니다. \"이제 굶지 말거라. 밥은 이 할미가 해 주마.\"",
+      "cast": [
+        "deoksam",
+        "bokdong:healthy",
+        "mother"
+      ],
+      "location": "hanok",
+      "visual_desc": "Evening in the hanok courtyard under moonlight: {deoksam} sits beside {bokdong} the boy who weeps with lowered head, while {mother} kneels and clasps the boy's small hands warmly. Deeply tender, tearful, family bond, soft moonlight.",
+      "sentences": [
+        81,
+        84
+      ]
+    },
+    {
+      "id": 26,
+      "act": "resolution",
+      "narration": "덕삼은 복동을 양자로 들이고, 작은 소금 가게를 열었습니다. 가게는 날로 번창했지만, 그 문턱은 늘 가난한 이에게 열려 있었습니다.",
+      "cast": [
+        "deoksam",
+        "bokdong:healthy"
+      ],
+      "location": "market",
+      "visual_desc": "A thriving little salt shop in the market: {deoksam} and {bokdong} the boy hand out salt to poor grateful villagers at the door, jars of fine salt stacked around. Warm bustling prosperous yet kind mood, bright day.",
+      "sentences": [
+        85,
+        85
+      ]
+    },
+    {
+      "id": 27,
+      "act": "resolution",
+      "narration": "덕삼은 넉넉해서 베푼 것이 아니었습니다. 늘 가난했고, 제 한 몸 건사하기도 벅찬 사람이었습니다. 그저 쓰러진 이를, 차마 그냥 지나치지 못했을 뿐입니다. 하지만 그 마음은, 복동이라는 귀한 인연이 되어 돌아왔습니다.",
+      "cast": [
+        "deoksam",
+        "bokdong:healthy"
+      ],
+      "location": "hanok",
+      "visual_desc": "A warm quiet portrait of {deoksam} and {bokdong} the boy standing together in the doorway of their home like father and son, content and at peace. Golden hour light, gentle reflective mood.",
+      "sentences": [
+        86,
+        89
+      ]
+    },
+    {
+      "id": 28,
+      "act": "resolution",
+      "narration": "사람들은 그가 소금을 비 오는 날 판다고 비웃었습니다. 하지만 그 비는, 덕삼에게 내린 가장 큰 복이었습니다. 베푸는 마음은 결코, 헛되이 사라지지 않는 법입니다.",
+      "cast": [
+        "deoksam",
+        "bokdong:healthy"
+      ],
+      "location": "hanok",
+      "visual_desc": "{deoksam} and {bokdong} the boy stand under the eaves watching gentle rain fall over their peaceful hanok courtyard, faint warm smiles, the rain shining like a blessing. Serene hopeful closing mood, soft luminous light.",
+      "sentences": [
+        90,
+        92
+      ]
+    }
+  ]
+}

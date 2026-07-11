@@ -1,0 +1,9 @@
+{
+  "_comment": "야담 채널 고정 그림체 (확정 2026-06-30, B안 부드러운 채색 + 조선 문화앵커). 빈밥상_assets/STYLE.md 이관.",
+  "preset": "Korean folktale illustration, soft painterly Korean webtoon (manhwa) style, warm muted palette, beautiful refined faces, smooth luminous shading, cinematic widescreen 16:9, high quality. Set in the Joseon dynasty of old Korea; ALL people are Korean wearing traditional hanbok; Korean thatched-roof hanok houses, period-accurate Korean village; NOT Western, NOT European, NOT Japanese, NOT fantasy.",
+  "negative": "No text, no letters, no numbers, no watermark.",
+  "model": "gemini-3-pro-image",
+  "aspect_ratio": "16:9",
+  "max_refs": 5,
+  "max_concurrent": 5
+}

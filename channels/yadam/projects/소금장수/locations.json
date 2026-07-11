@@ -1,0 +1,20 @@
+{
+  "_meta": "재등장 장소만 시트화. build.py는 씬 location의 sheet 파일이 존재하면 ref로 첨부(cast ref 다음, 최대 max_refs), 없으면 desc 텍스트만 사용. 1회성 배경(관아 마당·염전·한양)은 넣지 않고 씬 텍스트로 처리.",
+
+  "hanok": {
+    "desc": "a poor small thatched-roof hanok (chogajip) with a low earthen wall and a bare dirt courtyard, humble Joseon mountain-village home, warm modest interior with a low room and small kitchen",
+    "sheet": "assets/locations/hanok_sheet.png"
+  },
+  "market": {
+    "desc": "a rustic Joseon village marketplace (jangteo), straw-roofed stalls, sacks of salt and grain, earthen jars, common folk in hanbok bustling",
+    "sheet": "assets/locations/market_sheet.png"
+  },
+  "cave": {
+    "desc": "a cool dim mountain cave interior with rows of large earthen jars (onggi) storing salt, shadowy damp stone walls, faint light from the entrance",
+    "sheet": "assets/locations/cave_sheet.png"
+  },
+  "mountain_path": {
+    "desc": "a steep rugged forest mountain path in old Korea, tall pine trees and mossy rocks, a narrow winding dirt trail, misty depth",
+    "sheet": "assets/locations/mountain_path_sheet.png"
+  }
+}

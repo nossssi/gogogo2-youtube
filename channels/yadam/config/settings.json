@@ -1,0 +1,51 @@
+{
+  "id": "yadam",
+  "name": "야담",
+  "type": "스토리/내러티브 (야담·전래 썰)",
+  "target": "옛이야기·괴담·따뜻한 썰을 즐기는 시청자",
+  "tone": "차분한 옛이야기 나레이션, 담백하고 여운 있게",
+
+  "image": {
+    "engine": "flow",
+    "_comment_engine": "flow | gemini. flow: labs.google Flow 웹세션 무료 생성(비용 0, reCAPTCHA 브리지 필요 — docs/flow-image.md). gemini: 유료 API 폴백. 엔진은 generate_image.py가 이 값을 읽어 자동 분기(호출부 무관).",
+    "flow": {
+      "model": "banana-pro",
+      "_comment_model": "banana-pro=Nano Banana Pro(GEM_PIX_2, 지금 파이프라인 표준) | banana2=NARWHAL | imagen4=IMAGEN_3_5",
+      "ratio": "16:9",
+      "ports": [3847, 3848, 3849],
+      "_comment_ports": "멀티계정 레인. 계정(Chrome 프로필)마다 데몬 포트 하나. 예: [3847,3848,3849]. flow_multi.py로 기동. 클라이언트가 놀고있는 레인을 임대해 병렬 생성 → 계정 수만큼 처리량/쿼터↑.",
+      "port": 3847,
+      "_comment": "project_id는 데몬별 ~/.flow-proxy/token_<port>.json에 저장(확장 Connect 또는 /set-project). 배치 전 데몬 상주 + 각 프로필 Flow 탭 로그인 필요."
+    }
+  },
+
+  "tts": {
+    "engine": "vrew",
+    "_comment_engine": "elevenlabs | vrew. vrew: 사용자가 Vrew에서 음성+SRT를 뽑아 {P}/vrew/에 넣고 scripts/tts/ingest_vrew.py 실행 (TTS·무음압축 단계 건너뜀). 아래 voice 설정은 elevenlabs 전용.",
+    "voice_id": "7oLyBHyhxAjrctX6ZQlw",
+    "voice_name": "Bomisori - Warm and Clear",
+    "model_id": "eleven_v3",
+    "speed": 1.0,
+    "stability": 0.5,
+    "similarity_boost": 0.75
+  },
+
+  "silence": {
+    "min_silence": 0.6,
+    "target_silence": 0.3,
+    "silence_thresh_db": -50
+  },
+
+  "subtitle": {
+    "max_chars": 20,
+    "fps": 30
+  },
+
+  "render": {
+    "engine": "capcut",
+    "_comment_engine": "capcut 전용. capcut_export.py가 {V} 산출물로 CapCut 드래프트 생성 → 사람이 마무리 편집 후 {P}/output/에 mp4 내보내기.",
+    "fps": 30,
+    "width": 1920,
+    "height": 1080
+  }
+}

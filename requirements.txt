@@ -1,0 +1,26 @@
+# YouTube 자동화 프로젝트 의존성
+# Python 3.10+ 필요
+
+# HTTP
+requests>=2.28.0
+httpx>=0.24.0
+curl-cffi>=0.7.0          # Grok API (anti-detection HTTP)
+browser-cookie3>=0.20.0    # Chrome 프로필에서 Grok SSO 자동 추출 (sync_cookies_from_browser.py)
+
+# Google APIs
+google-genai>=1.0.0        # Gemini API (본문/썸네일 이미지 - Nano Banana 패밀리)
+google-api-python-client>=2.100.0  # YouTube Data API
+google-auth>=2.20.0        # Google OAuth
+google-auth-oauthlib>=1.0.0        # YouTube OAuth 로그인
+
+# TTS / Audio
+numpy>=1.24.0              # 무음 압축 (remove_silence.py)
+
+# Image
+Pillow>=10.0.0             # 이미지 처리 (썸네일 + 본문 캐릭터 레퍼런스)
+
+# 환경변수
+python-dotenv>=1.0.0
+
+# YouTube 레퍼런스 수집
+yt-dlp>=2024.01.01

@@ -52,7 +52,7 @@ scripts/
   research/scan_channels.py    # watchlist 채널 최근 영상 스캔 → 조회수/일 소재 리포트 (yt-dlp, 무료)
   research/collect_refs.py     # 영상 자막·댓글·메타 수집 (--benchmark=공식 개정용 / --project)
   script/validate_script.py    # 대본 제약 기계 검증 (분량·숫자·영어·20자 호흡·문어체)
-  image/generate_image.py      # Nano Banana Pro(gemini-3-pro-image, 2K, multimodal ref)
+  image/generate_image.py      # 엔진 디스패처. flow=Nano Banana+2K 업스케일(무료 기본) / gemini=Nano Banana Pro API(유료)
   assets/turnaround.py         # characters.json → 턴어라운드
   assets/background.py         # locations.json → 배경 시트
   storyboard/build.py          # characters+locations+storyboard.json → 씬 이미지
@@ -72,12 +72,12 @@ scripts/
 
 - 프롬프트 = `visual_desc`({id}→variant별 trait-lock 치환) + 채널 `style.json`(STYLE+문화앵커+NEG)
 - refs = cast별 turnaround + location.sheet → 최대 5장, cast 우선
-- 모델: Nano Banana Pro, 동시성 ~5
+- 모델(flow 기본): Nano Banana(NARWHAL) + 2K 업스케일, 동시성 ~5 — banana-pro와 일관성 동급이면서 일일 쿼터 ~10배(A/B 실측 2026-07). `settings.json image.flow.model`로 변경
 
 ## 이미지 엔진 (flow=무료 / gemini=유료)
 
 `settings.json image.engine`로 분기(**기본 `flow`, 미설정 시에도 `flow`**). `generate_image.py`가 이 값을 읽어 자동 라우팅 — 호출부(turnaround/background/build) 무관.
-- **flow**(무료, 기본): labs.google Flow 웹세션(버너 구글 로그인)으로 Nano Banana Pro 생성. **상주 데몬 + Chrome Flow 탭 로그인 필요**(reCAPTCHA 브리지, 반수동). 셋업: `docs/flow-image.md`.
+- **flow**(무료, 기본): labs.google Flow 웹세션(버너 구글 로그인)으로 Nano Banana(NARWHAL) 생성 + `upsampleImage` 2K 업스케일(실패 시 원본 폴백). **상주 데몬 + Chrome Flow 탭 로그인 필요**(reCAPTCHA 브리지, 반수동). 셋업: `docs/flow-image.md`.
 - **gemini**(유료, 명시 opt-in 전용): `settings.json image.engine="gemini"`로 **직접 지정 + `.env`에 `GEMINI_API_KEY` 등록**했을 때만 API 호출. **자동 폴백 없음** — flow가 깨져도 gemini로 몰래 넘어가지 않고 에러를 낸다(실수 과금 방지). 키 없이 gemini 지정 시 안내 메시지 후 종료.
 
 ## 환경

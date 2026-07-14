@@ -3,12 +3,15 @@
 Flow 이미지 생성 클라이언트 — labs.google Flow 내부 API(aisandbox-pa)로 무료 생성.
 
 flow_token_server.py(상주 데몬)에서 access token + reCAPTCHA 토큰을 받아
-  uploadImage(참조 이미지들 → mediaId)  →  flowMedia:batchGenerateImages(Nano Banana Pro)
+  uploadImage(참조 이미지들 → mediaId)  →  flowMedia:batchGenerateImages  →  upsampleImage(2K)
 를 호출하고 결과 이미지를 out_path 에 저장한다. API 키 불필요.
+
+기본 모델 banana(NARWHAL) — banana-pro(GEM_PIX_2)와 캐릭터 일관성 동급이면서 일일 쿼터가
+훨씬 느슨함(A/B 실측 2026-07). 해상도는 upsampleImage 2K 업스케일로 확보(기본 켜짐).
 
 generate_image.py 의 engine=="flow" 경로에서 import 되어 run() 이 호출된다.
 단독 실행도 가능:
-    python3 scripts/image/flow_client.py <prompt_file> <out.png> [ref1 ref2 ...] [--model banana-pro] [--ratio 16:9]
+    python3 scripts/image/flow_client.py <prompt_file> <out.png> [ref1 ref2 ...] [--model banana] [--ratio 16:9] [--upscale 2K]
 
 의존성: 표준 라이브러리만. Chrome + flow_token_server 데몬 + 확장 필요.
 """
@@ -17,6 +20,7 @@ import base64
 import hashlib
 import json
 import pathlib
+import re
 import sys
 import time
 import urllib.error
@@ -40,6 +44,8 @@ ASPECT_MAP = {
 
 UPLOAD_CACHE_FILE = pathlib.Path.home() / ".flow-proxy" / "uploads.json"
 UPLOAD_CACHE_TTL_MS = 6 * 3600 * 1000  # mediaId 재사용 유효기간(보수적 6시간)
+
+_UUID_RE = re.compile(r"[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}")
 
 
 class FlowError(RuntimeError):
@@ -171,7 +177,7 @@ def batch_generate(prompt: str, image_inputs: list[dict], token: str, project_id
         "useNewMedia": True,
         "requests": [{
             "clientContext": client_ctx,
-            "imageModelName": MODELS.get(model, "GEM_PIX_2"),
+            "imageModelName": MODELS.get(model, "NARWHAL"),
             "imageAspectRatio": ASPECT_MAP.get(ratio, "IMAGE_ASPECT_RATIO_LANDSCAPE"),
             "structuredPrompt": {"parts": [{"text": prompt}]},
             "seed": seed if seed is not None else _rand_seed(),
@@ -183,6 +189,36 @@ def batch_generate(prompt: str, image_inputs: list[dict], token: str, project_id
     return extract_images(data)
 
 
+def _media_uuid(value) -> str | None:
+    if not isinstance(value, str) or not value:
+        return None
+    match = _UUID_RE.search(value)
+    return match.group(0) if match else value.rsplit("/", 1)[-1]
+
+
+def _find_media_id(obj) -> str | None:
+    """생성 응답에서 업스케일에 쓸 mediaId를 재귀 탐색(fifeUrl 옆의 mediaId/name/id 우선)."""
+    if isinstance(obj, dict):
+        if "fifeUrl" in obj:
+            for key in ("mediaId", "name", "id"):
+                found = _media_uuid(obj.get(key))
+                if found:
+                    return found
+        found = _media_uuid(obj.get("mediaId"))
+        if found:
+            return found
+        for child in obj.values():
+            found = _find_media_id(child)
+            if found:
+                return found
+    elif isinstance(obj, list):
+        for child in obj:
+            found = _find_media_id(child)
+            if found:
+                return found
+    return None
+
+
 def extract_images(data: dict) -> list[dict]:
     media = data.get("media")
     if isinstance(media, list) and media:
@@ -190,9 +226,10 @@ def extract_images(data: dict) -> list[dict]:
         for item in media:
             g = (item.get("image") or {}).get("generatedImage") or {}
             if g.get("fifeUrl"):
-                out.append({"type": "url", "url": g["fifeUrl"]})
+                out.append({"type": "url", "url": g["fifeUrl"], "media_id": _find_media_id(item)})
             elif g.get("encodedImage") or g.get("imageBytes"):
-                out.append({"type": "base64", "data": g.get("encodedImage") or g.get("imageBytes")})
+                out.append({"type": "base64", "data": g.get("encodedImage") or g.get("imageBytes"),
+                            "media_id": _find_media_id(item)})
         if out:
             return out
     # 레거시 ImageFX 포맷 대비
@@ -209,10 +246,45 @@ def _download(item: dict, timeout: int = 120) -> bytes:
     return base64.b64decode(item["data"])
 
 
+def upsample(media_id: str, resolution: str, token: str, project_id: str, port: int) -> bytes:
+    """생성 이미지를 2K/4K로 업스케일(무료 티어, 별도 reCAPTCHA 필요). base64 디코드해 반환."""
+    payload = {
+        "mediaId": media_id,
+        "targetResolution": f"UPSAMPLE_IMAGE_RESOLUTION_{resolution}",
+        "clientContext": {
+            "recaptchaContext": {"token": daemon_recaptcha(port),
+                                 "applicationType": "RECAPTCHA_APPLICATION_TYPE_WEB"},
+            "projectId": project_id,
+            "tool": "PINHOLE",
+            "userPaygateTier": "PAYGATE_TIER_ZERO",
+            "sessionId": ";" + str(int(time.time() * 1000)),
+        },
+    }
+    data = _post(f"{ENDPOINT_BASE}/flow/upsampleImage", payload, token=token, timeout=180)
+    encoded = data.get("encodedImage")
+    if not encoded:
+        raise FlowError(f"업스케일 응답에 이미지 없음: {json.dumps(data)[:300]}")
+    return base64.b64decode(encoded)
+
+
+def _retry_wait(status: int) -> float | None:
+    """상태코드별 재시도 대기(초). None = 재시도 불가."""
+    if status == 403:
+        return 30
+    if status == 408:
+        return 5
+    if status == 429:
+        return 120
+    if 500 <= status < 600:
+        return 5
+    return None
+
+
 def run(prompt: str, out_path: pathlib.Path, refs: list[pathlib.Path],
-        model: str = "banana-pro", ratio: str = "16:9", ports: list[int] | int = 3847,
-        seed: int | None = None, max_retries: int = 3) -> int:
-    """flow 경로 진입점. ports가 여러 개면 놀고있는 레인(계정)을 잡아 병렬 처리. 성공 0, 실패 비0."""
+        model: str = "banana", ratio: str = "16:9", ports: list[int] | int = 3847,
+        seed: int | None = None, max_retries: int = 3, upscale: str = "2K") -> int:
+    """flow 경로 진입점. ports가 여러 개면 놀고있는 레인(계정)을 잡아 병렬 처리. 성공 0, 실패 비0.
+    upscale: "2K"|"4K"|"" — 생성 후 upsampleImage 업스케일(실패 시 원본 저장, 기본 2K)."""
     port_list = [ports] if isinstance(ports, int) else list(ports)
     # 레인 임대 — 단일 포트면 그 포트, 멀티면 놀고있는 것 하나
     try:
@@ -221,14 +293,14 @@ def run(prompt: str, out_path: pathlib.Path, refs: list[pathlib.Path],
         print(f"error: {e}", file=sys.stderr)
         return 2
     try:
-        return _run_on_port(prompt, out_path, refs, model, ratio, port, seed, max_retries)
+        return _run_on_port(prompt, out_path, refs, model, ratio, port, seed, max_retries, upscale)
     finally:
         release_lane(port)
 
 
 def _run_on_port(prompt: str, out_path: pathlib.Path, refs: list[pathlib.Path],
                  model: str, ratio: str, port: int,
-                 seed: int | None, max_retries: int) -> int:
+                 seed: int | None, max_retries: int, upscale: str = "2K") -> int:
     try:
         token, project_id = daemon_token(port)
     except FlowError as e:
@@ -248,22 +320,36 @@ def _run_on_port(prompt: str, out_path: pathlib.Path, refs: list[pathlib.Path],
         return 1
 
     backoff = 5
+    want_upscale = str(upscale or "").upper()
     for attempt in range(1, max_retries + 1):
         try:
             recaptcha = daemon_recaptcha(port)
             images = batch_generate(prompt, image_inputs, token, project_id,
                                     recaptcha, model, ratio, seed)
-            buf = _download(images[0])
+            first = images[0]
+            buf = None
+            tag = f"flow/{model}"
+            if want_upscale in ("2K", "4K") and first.get("media_id"):
+                try:
+                    buf = upsample(first["media_id"], want_upscale, token, project_id, port)
+                    tag += f"+{want_upscale}"
+                except (FlowError, urllib.error.HTTPError, urllib.error.URLError, OSError) as exc:
+                    print(f"업스케일 실패, 원본 저장: {exc}", file=sys.stderr)
+            if buf is None:
+                buf = _download(first)
             out_path.parent.mkdir(parents=True, exist_ok=True)
             out_path.write_bytes(buf)
-            print(f"saved {out_path}  ({out_path.stat().st_size} bytes)  [flow/{model}]")
+            print(f"saved {out_path}  ({out_path.stat().st_size} bytes)  [{tag}]")
             return 0
         except urllib.error.HTTPError as e:
             body = e.read().decode(errors="replace")
-            if e.code == 429 and attempt < max_retries:
-                print(f"429 rate limit — {backoff}s 후 재시도 ({attempt}/{max_retries})", file=sys.stderr)
-                time.sleep(backoff)
-                backoff *= 2
+            if e.code == 401:
+                print("HTTP 401 — Flow 세션 만료. Chrome 확장에서 Reconnect 후 재시도.", file=sys.stderr)
+                return 1
+            wait = _retry_wait(e.code)
+            if wait is not None and attempt < max_retries:
+                print(f"HTTP {e.code} — {wait:.0f}s 후 재시도 ({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(wait)
                 continue
             print(f"HTTP {e.code} from Flow: {body[:800]}", file=sys.stderr)
             return 1
@@ -298,10 +384,11 @@ def main() -> int:
     ap.add_argument("prompt_file", type=pathlib.Path)
     ap.add_argument("out_path", type=pathlib.Path)
     ap.add_argument("refs", nargs="*", type=pathlib.Path)
-    ap.add_argument("--model", default="banana-pro")
+    ap.add_argument("--model", default="banana")
     ap.add_argument("--ratio", default="16:9")
     ap.add_argument("--ports", default="3847", help="데몬 포트(들). 쉼표구분 멀티계정 레인. 예: 3847,3848,3849")
     ap.add_argument("--seed", type=int, default=None)
+    ap.add_argument("--upscale", default="2K", help='업스케일 해상도: 2K(기본)|4K|"" (끄기)')
     args = ap.parse_args()
     ports = [int(x) for x in str(args.ports).split(",") if x.strip()]
 
@@ -315,7 +402,8 @@ def main() -> int:
 
     prompt = args.prompt_file.read_text(encoding="utf-8")
     return run(prompt, args.out_path, list(args.refs),
-               model=args.model, ratio=args.ratio, ports=ports, seed=args.seed)
+               model=args.model, ratio=args.ratio, ports=ports, seed=args.seed,
+               upscale=args.upscale)
 
 
 if __name__ == "__main__":

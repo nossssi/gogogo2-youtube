@@ -5,6 +5,20 @@
   "target": "타겟 시청자",
   "tone": "톤앤매너",
 
+  "image": {
+    "engine": "flow",
+    "_comment_engine": "flow | gemini. flow: labs.google Flow 웹세션 무료 생성(비용 0, reCAPTCHA 브리지 필요 — docs/flow-image.md). gemini: 유료 API 폴백(명시 opt-in + GEMINI_API_KEY 필요).",
+    "flow": {
+      "model": "banana",
+      "_comment_model": "banana=Nano Banana(NARWHAL, 기본 — 일관성 banana-pro 동급·일일 쿼터 훨씬 느슨) | banana-pro=Nano Banana Pro(GEM_PIX_2, 쿼터 빡빡 ~15장/일) | imagen4=IMAGEN_3_5(일관성 약함)",
+      "upscale": "2K",
+      "_comment_upscale": "생성 후 upsampleImage 업스케일: 2K(기본)|4K|\"\"(끄기). 실패 시 원본(1376x768) 저장으로 폴백.",
+      "ratio": "16:9",
+      "ports": [3847],
+      "_comment_ports": "멀티계정 레인. 계정(Chrome 프로필)마다 데몬 포트 하나. 예: [3847,3848,3849]. flow_multi.py로 기동."
+    }
+  },
+
   "tts": {
     "voice_id": "ZZ4xhVcc83kZBfNIlIIz",
     "model_id": "eleven_v3",

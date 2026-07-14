@@ -7,12 +7,15 @@
 
   "image": {
     "engine": "flow",
-    "_comment_engine": "flow | gemini. flow: labs.google Flow 웹세션 무료 생성(비용 0, reCAPTCHA 브리지 필요 — docs/flow-image.md). gemini: 유료 API 폴백. 엔진은 generate_image.py가 이 값을 읽어 자동 분기(호출부 무관).",
+    "_comment_engine": "flow | gemini. flow: labs.google Flow 웹세션 무료 생성(비용 0, reCAPTCHA 브리지 필요 — docs/flow-image.md). gemini: 유료 API 폴백. 엔진은 generate_image.py가 이 값을 읽어 자동 분기(호출부 무관). 2026-07-15 gemini→flow 복귀(테스트=무료 원칙).",
     "flow": {
-      "model": "banana-pro",
-      "_comment_model": "banana-pro=Nano Banana Pro(GEM_PIX_2, 지금 파이프라인 표준) | banana2=NARWHAL | imagen4=IMAGEN_3_5",
+      "model": "banana",
+      "_comment_model": "banana=Nano Banana(NARWHAL, 기본 — 일관성 banana-pro 동급·일일 쿼터 훨씬 느슨, A/B 실측 2026-07) | banana-pro=Nano Banana Pro(GEM_PIX_2, 쿼터 빡빡 ~15장/일) | imagen4=IMAGEN_3_5(일관성 약함)",
+      "upscale": "2K",
+      "_comment_upscale": "생성 후 upsampleImage 업스케일: 2K(기본)|4K|\"\"(끄기). 실패 시 원본(1376x768) 저장으로 폴백.",
       "ratio": "16:9",
-      "ports": [3847, 3848, 3849],
+      "ports": [3849],
+      "_ports_full": [3847, 3848, 3849],
       "_comment_ports": "멀티계정 레인. 계정(Chrome 프로필)마다 데몬 포트 하나. 예: [3847,3848,3849]. flow_multi.py로 기동. 클라이언트가 놀고있는 레인을 임대해 병렬 생성 → 계정 수만큼 처리량/쿼터↑.",
       "port": 3847,
       "_comment": "project_id는 데몬별 ~/.flow-proxy/token_<port>.json에 저장(확장 Connect 또는 /set-project). 배치 전 데몬 상주 + 각 프로필 Flow 탭 로그인 필요."

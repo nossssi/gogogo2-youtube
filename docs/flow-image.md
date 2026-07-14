@@ -1,7 +1,12 @@
 # Flow 무료 이미지 생성 (labs.google 웹세션)
 
 Gemini 유료 API 대신 **labs.google Flow** 웹세션(구글 로그인)으로 이미지를 **무료** 생성한다.
-지금 파이프라인과 동일한 **Nano Banana Pro + 다중 참조 이미지(캐릭터 일관성)**를 그대로 쓴다.
+**Nano Banana(NARWHAL) + 다중 참조 이미지(캐릭터 일관성) + 2K 업스케일**이 기본이다.
+
+> 모델 기본값이 banana인 이유(A/B 실측 2026-07, 빈밥상 씬 6·22 동일 프롬프트·시드):
+> ① 캐릭터 일관성이 banana-pro(GEM_PIX_2)와 동급(식별 앵커·트레잇 락 모두 유지),
+> ② banana-pro는 일일 쿼터가 ~15장 수준으로 빡빡한 반면 banana는 훨씬 느슨(~100장대),
+> ③ banana-pro도 원본은 1376×768로 나옴 — 2K는 어차피 `upsampleImage` 업스케일로 확보(모델 무관).
 
 > 원리: Flow 웹앱은 내부적으로 `aisandbox-pa.googleapis.com`를 OAuth 세션 토큰으로 호출한다.
 > 그 토큰과 요청마다 필요한 reCAPTCHA 토큰을 **Chrome 확장 + 상주 데몬**이 브리지한다.
@@ -69,10 +74,14 @@ curl -s localhost:3847/status      # {"connected": true, ...} 면 준비됨
 - 무료(기본): `settings.json` → `image.engine: "flow"`
 - 유료 폴백: `image.engine: "gemini"` (또는 일회성으로 `IMAGE_ENGINE=gemini …` / `--engine gemini`)
 
+### 모델·업스케일 설정 (`settings.json image.flow`)
+- `model`: `banana`(기본, NARWHAL) | `banana-pro`(GEM_PIX_2, 쿼터 빡빡) | `imagen4`
+- `upscale`: `"2K"`(기본) | `"4K"` | `""`(끄기) — 생성 직후 `upsampleImage`로 업스케일, **실패 시 원본(1376×768) 저장으로 폴백** (배치가 죽지 않음). 업스케일 1회당 reCAPTCHA 토큰 1개를 추가 소모.
+
 ## 단독 호출 (디버그)
 ```bash
 echo "a red apple on white" > /tmp/p.txt
-python3 scripts/image/flow_client.py /tmp/p.txt /tmp/out.png ref1.png ref2.png --model banana-pro --ratio 16:9
+python3 scripts/image/flow_client.py /tmp/p.txt /tmp/out.png ref1.png ref2.png --model banana --ratio 16:9 --upscale 2K
 ```
 
 ## 트러블슈팅
@@ -83,8 +92,10 @@ python3 scripts/image/flow_client.py /tmp/p.txt /tmp/out.png ref1.png ref2.png -
 | `reCAPTCHA timeout` | Chrome에 Flow 탭이 닫혔거나 미로그인/확장 미로드 → 탭 열고 Connect |
 | `session cookie expired` | 확장에서 **Reconnect** |
 | `projectId 미설정` | 위 5번 `/set-project` |
-| `HTTP 429` | 레이트리밋 — 클라이언트가 백오프 재시도. 지속되면 잠시 대기 |
-| 캐릭터 일관성 저하 | `model`이 `banana-pro`인지 확인(Imagen은 약함) |
+| `HTTP 403/408/429/5xx` | 레이트리밋/일시 오류 — 클라이언트가 상태코드별 대기 후 재시도(403→30s, 429→120s). 지속되면 일일 쿼터 소진 의심 |
+| `HTTP 401` | 세션 만료 — 재시도 안 함. 확장에서 **Reconnect** |
+| `업스케일 실패, 원본 저장` | upsampleImage 일시 오류 — 원본(1376×768)으로 폴백됨. 해당 씬만 나중에 재생성 |
+| 캐릭터 일관성 저하 | `model`이 `banana`/`banana-pro`인지 확인(Imagen은 약함) |
 
 ## 한계
 

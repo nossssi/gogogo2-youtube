@@ -87,8 +87,9 @@ def run_flow(args) -> int:
     settings = find_config(args.prompt_file.parent, "settings.json") or {}
     flow_cfg = (settings.get("image") or {}).get("flow") or {}
     style = find_config(args.prompt_file.parent, "style.json") or {}
-    model = flow_cfg.get("model", "banana-pro")
+    model = flow_cfg.get("model", "banana")
     ratio = flow_cfg.get("ratio") or style.get("aspect_ratio") or "16:9"
+    upscale = flow_cfg.get("upscale", "2K")
     # 멀티계정 레인: image.flow.ports(리스트) 우선, 없으면 image.flow.port(단일), env FLOW_PORTS 오버라이드
     env_ports = os.environ.get("FLOW_PORTS")
     if env_ports:
@@ -100,7 +101,7 @@ def run_flow(args) -> int:
 
     prompt = args.prompt_file.read_text(encoding="utf-8")
     return flow_client.run(prompt, args.out_path, list(args.refs),
-                           model=model, ratio=ratio, ports=ports)
+                           model=model, ratio=ratio, ports=ports, upscale=upscale)
 
 
 def main() -> int:

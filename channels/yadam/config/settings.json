@@ -14,9 +14,9 @@
       "upscale": "2K",
       "_comment_upscale": "생성 후 upsampleImage 업스케일: 2K(기본)|4K|\"\"(끄기). 실패 시 원본(1376x768) 저장으로 폴백.",
       "ratio": "16:9",
-      "ports": [3849],
+      "ports": [3847],
       "_ports_full": [3847, 3848, 3849],
-      "_comment_ports": "멀티계정 레인. 계정(Chrome 프로필)마다 데몬 포트 하나. 예: [3847,3848,3849]. flow_multi.py로 기동. 클라이언트가 놀고있는 레인을 임대해 병렬 생성 → 계정 수만큼 처리량/쿼터↑.",
+      "_comment_ports": "멀티계정 레인. 계정(Chrome 프로필)마다 데몬 포트 하나. 예: [3847,3848,3849]. flow_multi.py로 기동. 클라이언트가 놀고있는 레인을 임대해 병렬 생성 → 계정 수만큼 처리량/쿼터↑. 개인 레인은 커밋하지 말고 FLOW_PORTS=3849 처럼 env로 오버라이드.",
       "port": 3847,
       "_comment": "project_id는 데몬별 ~/.flow-proxy/token_<port>.json에 저장(확장 Connect 또는 /set-project). 배치 전 데몬 상주 + 각 프로필 Flow 탭 로그인 필요."
     }

@@ -17,22 +17,26 @@
 ## 워크플로우 (story-pd 스킬 상태머신)
 
 ```
-SCRIPT → ASSET_GEN(★검수 게이트) → STORYBOARD → SCENE_IMG → TTS → RENDER → UPLOAD
+SCRIPT → ASSET_GEN → STORYBOARD → SCENE_IMG → TTS → RENDER → UPLOAD
+(전자동 — 사람 게이트는 TTS Vrew 낭독과 CapCut 마무리 편집 둘만. asset 검수 게이트는 2026-07-15 제거.
+ ★TTS는 SCENE_IMG와 병렬 트랙: vrew export는 대본 확정 직후 실행, 낭독 도착 시 이미지 배치 중에도 ingest~SCENE_TIMING 선처리)
 ```
 
 파일 존재 기반 상태 감지. 프로젝트 경로 `{P}` = `channels/{채널}/projects/{프로젝트}`.
 
-**SCRIPT 서브 상태머신** (`{S}` = `{P}/_script`, 주력 = 장편 3~4만자 단일 대하 서사):
+**SCRIPT 서브 상태머신** (`{S}` = `{P}/_script`, 주력 = 장편 2.4~2.9만자 = 100~120분 — 2026-07 시장 실측 정점):
 ```
-WATCHLIST(1회) → SCAN(소재 트렌드) → CONCEPT(★대화: 레퍼런스 1편 분석+확정 브리프) → OUTLINE(★대화: 장 설계+복선 장부+레지스트리 초안)
+WATCHLIST(1회) → SCAN(소재 트렌드, URL 직접 지정 시 생략) → CONCEPT(★대화: 레퍼런스 1편 분석+확정 브리프) → OUTLINE(★대화: 장 설계+복선 장부+레지스트리 초안)
 → DRAFT(2~3장 배치 순차 집필+bible+레지스트리 동기화) → REVIEW(validate_script.py+체크리스트) → script.txt+meta.txt
 ```
 - 대본 공식(playbook) = story-pd `prompts/script-guide.md` — **매 편 벤치마킹 안 함**, 공식 버전 그대로 적용. 개정은 딥 벤치마킹(`benchmark-guide.md`) 제안 → 사용자 승인 시에만 (`playbook-history.md`에 기록).
 - **별도 인물 추출 단계 없음 (레지스트리 생애주기)** — characters/locations.json은 OUTLINE에서 서사 필드로 태어나고, DRAFT 중 동기화되고, ASSET_GEN 진입 시 시각 필드(영문 lock·negatives)를 완성한다.
 
+**VEO_HOOK (SCENE_TIMING 후, 자동·유료)** — `veo_hook.py`가 씬1 이미지+훅 대사로 Veo 8초 립싱크 클립(오디오 포함)을 생성해 렌더 storyboard 씬1 `video_path`에 주입. 엔진: `gemini`(기본 — API `veo-3.1-fast-generate-preview`, 키만 필요) / `flow`(웹세션 ~20크레딧, 데몬 필요). 실패해도 `{V}/veo_hook.json` 매니페스트(수동 커맨드 포함)를 남기고 RENDER 진행(스틸 폴백).
+
 **RENDER = CapCut export 전용 (자동 mp4 렌더 없음)** — `capcut_export.py`가 `{V}` 산출물로 CapCut 드래프트 생성(성공 시 `{P}/output/capcut_draft.json` 마커) → 사람이 CapCut에서 마무리 편집 → `{P}/output/`에 mp4 내보내기 → UPLOAD(upload.py가 output/의 mp4를 집는다).
 
-**TTS 반수동(Vrew) 모드** — `settings.json tts.engine: "vrew"`. `ingest_vrew.py --export-script`로 대본 내보내기(**1만자 한도 초과 시 `vrew_script_partNN.txt` 분할** — 파트별 낭독 후 `narration_NN.mp3/srt`로 저장, ingest가 샘플 정확도로 병합) → 사용자가 Vrew에서 음성+SRT 제작 → `{P}/vrew/`에 넣고 `ingest_vrew.py` 실행 → `audio.mp3`/`subtitle.srt`/`sentences.json` 생성 (ElevenLabs·alignment·무음압축 건너뜀) → **`split_long_cues.py --apply`로 자막 정형화** (①문장 경계 스냅: 문장 경계를 걸친 큐를 경계에서 분할 — 씬 경계=큐 경계 보장, ②20자 초과 분할; whisper 단어 실측, 폴백=음절 비례; --apply가 sentences.json에 문장별 실측 cue_range 기록; 반드시 scene_timing 전) → `scene_timing.py`부터 동일 (실측 cue_range가 있으면 정밀 모드, 없으면 비례 폴백).
+**TTS 반수동(Vrew) 모드** — `settings.json tts.engine: "vrew"`. `ingest_vrew.py --export-script`로 대본 내보내기(★script.txt 확정 직후 즉시 — 낭독과 이미지 생성 병렬)(**1만자 한도 초과 시 `vrew_script_partNN.txt` 분할** — 파트별 낭독 후 `narration_NN.mp3/srt`로 저장, ingest가 샘플 정확도로 병합) → 사용자가 Vrew에서 음성+SRT 제작 → `{P}/vrew/`에 넣고 `ingest_vrew.py` 실행 → `audio.mp3`/`subtitle.srt`/`sentences.json` 생성 (ElevenLabs·alignment·무음압축 건너뜀) → **`split_long_cues.py --apply`로 자막 정형화** (①문장 경계 스냅: 문장 경계를 걸친 큐를 경계에서 분할 — 씬 경계=큐 경계 보장, ②20자 초과 분할; whisper 단어 실측, 폴백=음절 비례; --apply가 sentences.json에 문장별 실측 cue_range 기록; 반드시 scene_timing 전) → `scene_timing.py`부터 동일 (실측 cue_range가 있으면 정밀 모드, 없으면 비례 폴백).
 
 ## 폴더 구조
 

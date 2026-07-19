@@ -7,7 +7,8 @@ Usage:
     GEMINI_API=xxx ./generate-image.py --model gemini-2.5-flash-image-preview <prompt_file> <out.png> [refs...]
 
 Defaults:
-    model: gemini-3-pro-image  (Nano Banana Pro 정식판 · 2K output · multimodal refs)
+    model: settings.json image.gemini.model → gemini-2.5-flash-image (Nano Banana 1 — 비용 기본)
+           Pro(2K·고품질)가 필요하면 --model gemini-3-pro-image 또는 settings에 지정.
     timeout: 600s
 
 Reference images are sent as inline parts BEFORE the text prompt — Gemini reads them
@@ -106,8 +107,9 @@ def run_flow(args) -> int:
 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--model", default="gemini-3-pro-image",
-                   help="Gemini image model (default: gemini-3-pro-image · Nano Banana Pro GA)")
+    p.add_argument("--model", default=None,
+                   help="Gemini image model. 미지정 시 settings.json image.gemini.model → "
+                        "gemini-2.5-flash-image(Nano Banana 1). Pro가 필요하면 gemini-3-pro-image 지정.")
     p.add_argument("--engine", default=None, choices=["gemini", "flow"],
                    help="이미지 엔진. 미지정 시 IMAGE_ENGINE env → settings.json image.engine → 'flow'(무료 기본).")
     p.add_argument("--timeout", type=int, default=600)
@@ -142,11 +144,20 @@ def main() -> int:
               file=sys.stderr)
         return 2
 
+    # gemini 모델·비율: --model > settings.json image.gemini > Nano Banana 1 / 16:9
+    settings = find_config(args.prompt_file.parent, "settings.json") or {}
+    gemini_cfg = (settings.get("image") or {}).get("gemini") or {}
+    if not args.model:
+        args.model = gemini_cfg.get("model") or "gemini-2.5-flash-image"
+    style = find_config(args.prompt_file.parent, "style.json") or {}
+    ratio = gemini_cfg.get("ratio") or style.get("aspect_ratio") or "16:9"
+
     prompt = args.prompt_file.read_text(encoding="utf-8")
     parts = [img_part(r) for r in args.refs] + [{"text": prompt}]
     body = {
         "contents": [{"parts": parts}],
-        "generationConfig": {"responseModalities": ["IMAGE"]},
+        "generationConfig": {"responseModalities": ["IMAGE"],
+                             "imageConfig": {"aspectRatio": ratio}},
     }
 
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{args.model}:generateContent"

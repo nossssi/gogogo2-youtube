@@ -110,7 +110,8 @@ def main() -> int:
     ap.add_argument("project_dir", type=pathlib.Path)
     ap.add_argument("--only", default="", help="생성할 씬 id 목록 (쉼표구분). 미지정 시 전체.")
     ap.add_argument("--dry-run", action="store_true", help="프롬프트/ref만 출력, 이미지 생성 안 함.")
-    ap.add_argument("--concurrency", type=int, default=0, help="동시 생성 수 (0=style.max_concurrent).")
+    ap.add_argument("--concurrency", type=int, default=0, help="동시 생성 수 (0=style.max_concurrent, flow면 레인 수로 캡).")
+    ap.add_argument("--force", action="store_true", help="체크포인트(OK+PNG 존재) 씬도 재생성.")
     args = ap.parse_args()
 
     project_dir = args.project_dir.resolve()
@@ -129,6 +130,7 @@ def main() -> int:
     storyboard = load_json(project_dir / "storyboard.json")
     scenes = storyboard["scenes"] if isinstance(storyboard, dict) else storyboard
 
+    all_scenes = scenes
     only = {int(x) for x in args.only.split(",") if x.strip()} if args.only else None
     if only:
         scenes = [s for s in scenes if s["id"] in only]
@@ -136,12 +138,43 @@ def main() -> int:
     scenes_dir = project_dir / "scenes"
     scenes_dir.mkdir(exist_ok=True)
 
+    # 체크포인트: 기존 built.json에서 OK이고 PNG가 실재하는 씬은 스킵 (--force로 무시)
+    out_json = project_dir / "storyboard.built.json"
+    prev = {}
+    if out_json.exists():
+        try:
+            prev = {s["id"]: s for s in load_json(out_json).get("scenes", [])}
+        except Exception:
+            prev = {}
+
+    def done(sid):
+        rec = prev.get(sid)
+        return bool(rec and rec.get("status") == "OK"
+                    and (scenes_dir / f"scene_{sid:02d}.png").exists())
+
+    if not args.force and not args.dry_run:
+        skipped = [s["id"] for s in scenes if done(s["id"])]
+        scenes = [s for s in scenes if not done(s["id"])]
+        if skipped:
+            print(f"체크포인트 스킵 {len(skipped)}씬 (OK+PNG 존재). --force로 재생성 가능.")
+
     key = find_env_key(project_dir)
     env = dict(os.environ)
     if key:
         env["GEMINI_API"] = key
 
     conc = args.concurrency or int(style.get("max_concurrent", 5))
+    # flow 엔진이면 레인(포트) 수 이상의 동시성은 "모든 레인이 사용 중" 즉시 실패만 낳는다 — 자동 캡
+    try:
+        img = load_json(project_dir.parent.parent / "config" / "settings.json").get("image", {})
+        if img.get("engine", "flow") == "flow":
+            flow = img.get("flow", {})
+            lanes = len(flow.get("ports") or ([flow["port"]] if flow.get("port") else [])) or 1
+            if conc > lanes:
+                print(f"flow 레인 {lanes}개 — 동시성 {conc}→{lanes}로 자동 캡")
+                conc = lanes
+    except Exception:
+        pass
     built = []
 
     def run(scene):
@@ -168,12 +201,13 @@ def main() -> int:
             built.append(rec)
             print(f"[{rec['id']:02d}] {rec.get('act',''):5} cast={rec.get('cast')} loc={rec.get('location')} refs->{rec['status']}")
 
-    built.sort(key=lambda s: s["id"])
-    out_json = project_dir / "storyboard.built.json"
-    json.dump({"scenes": built}, open(out_json, "w"), ensure_ascii=False, indent=2)
-    ok = sum(1 for s in built if s.get("status") == "OK")
-    dry = sum(1 for s in built if str(s.get("status", "")).startswith("DRY"))
-    print(f"\n완료: OK {ok} / DRY {dry} / 전체 {len(built)}  → {out_json.name}")
+    # 병합 저장: 이번에 돌린 씬은 새 결과, 안 돌린 씬은 기존 기록 유지 (--only가 체크포인트를 지우지 않게)
+    new_by_id = {s["id"]: s for s in built}
+    merged = [new_by_id.get(s["id"]) or prev.get(s["id"]) or dict(s) for s in all_scenes]
+    json.dump({"scenes": merged}, open(out_json, "w"), ensure_ascii=False, indent=2)
+    ok = sum(1 for s in merged if s.get("status") == "OK")
+    dry = sum(1 for s in merged if str(s.get("status", "")).startswith("DRY"))
+    print(f"\n완료(전체 기준): OK {ok} / DRY {dry} / 전체 {len(merged)} (이번 실행 {len(built)}씬)  → {out_json.name}")
     return 0
 
 

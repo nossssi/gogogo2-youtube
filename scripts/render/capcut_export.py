@@ -96,8 +96,8 @@ def create_text_material(subtitle, group_id, subtitle_config=None, highlight_ran
     text_color = "#FF0000" if emphasis else cfg.get("text_color", "#FFFFFF")
     border_color = cfg.get("border_color", "#000000")
     border_width = cfg.get("border_width", 0.08)
-    background_color = cfg.get("background_color", "#ffa880")
-    background_alpha = cfg.get("background_alpha", 0.6)
+    background_color = cfg.get("background_color", "#000000")
+    background_alpha = cfg.get("background_alpha", 0.7)
 
     # 스타일 블록 생성 헬퍼
     def make_style(range_start, range_end, color):

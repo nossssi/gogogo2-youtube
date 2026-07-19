@@ -18,7 +18,8 @@
 
 ```
 SCRIPT → ASSET_GEN → STORYBOARD → SCENE_IMG → TTS → RENDER → UPLOAD
-(전자동 — 사람 게이트는 TTS Vrew 낭독과 CapCut 마무리 편집 둘만. asset 검수 게이트는 2026-07-15 제거.
+(대본 후 대체로 자동 — 사람 게이트는 asset 검수(컨펌), TTS Vrew 낭독, CapCut 마무리 편집 셋.
+ ★asset 검수 게이트 2026-07-19 재도입: ASSET_GEN 후 contact sheet를 `open`으로 창에 띄우고, 사용자 OK 전엔 STORYBOARD 진행 금지.
  ★TTS는 SCENE_IMG와 병렬 트랙: vrew export는 대본 확정 직후 실행, 낭독 도착 시 이미지 배치 중에도 ingest~SCENE_TIMING 선처리)
 ```
 

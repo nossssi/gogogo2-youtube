@@ -1,0 +1,60 @@
+{
+ "video": "VDOppXMZuk8.mp4",
+ "dur_sec": 6636,
+ "motion_sec": 149,
+ "motion_pct": 2.2,
+ "motion_runs": 20,
+ "hook_motion_sec": 31,
+ "runs_top10": [
+  {
+   "start": 1,
+   "end": 32,
+   "dur": 32
+  },
+  {
+   "start": 1496,
+   "end": 1504,
+   "dur": 9
+  },
+  {
+   "start": 5456,
+   "end": 5464,
+   "dur": 9
+  },
+  {
+   "start": 5531,
+   "end": 5539,
+   "dur": 9
+  },
+  {
+   "start": 2936,
+   "end": 2942,
+   "dur": 7
+  },
+  {
+   "start": 3126,
+   "end": 3132,
+   "dur": 7
+  },
+  {
+   "start": 5386,
+   "end": 5392,
+   "dur": 7
+  },
+  {
+   "start": 5493,
+   "end": 5499,
+   "dur": 7
+  },
+  {
+   "start": 2984,
+   "end": 2989,
+   "dur": 6
+  },
+  {
+   "start": 5328,
+   "end": 5333,
+   "dur": 6
+  }
+ ]
+}

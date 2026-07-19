@@ -1,0 +1,60 @@
+{
+ "video": "DuLDLMdzlM4.mp4",
+ "dur_sec": 3549,
+ "motion_sec": 2789,
+ "motion_pct": 78.6,
+ "motion_runs": 154,
+ "hook_motion_sec": 98,
+ "runs_top10": [
+  {
+   "start": 223,
+   "end": 328,
+   "dur": 106
+  },
+  {
+   "start": 2589,
+   "end": 2664,
+   "dur": 76
+  },
+  {
+   "start": 2320,
+   "end": 2391,
+   "dur": 72
+  },
+  {
+   "start": 3482,
+   "end": 3548,
+   "dur": 67
+  },
+  {
+   "start": 3279,
+   "end": 3341,
+   "dur": 63
+  },
+  {
+   "start": 1281,
+   "end": 1336,
+   "dur": 56
+  },
+  {
+   "start": 338,
+   "end": 392,
+   "dur": 55
+  },
+  {
+   "start": 2505,
+   "end": 2559,
+   "dur": 55
+  },
+  {
+   "start": 1119,
+   "end": 1167,
+   "dur": 49
+  },
+  {
+   "start": 617,
+   "end": 660,
+   "dur": 44
+  }
+ ]
+}

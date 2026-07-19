@@ -1,0 +1,60 @@
+{
+ "video": "ZvseOxd_X14.mp4",
+ "dur_sec": 2756,
+ "motion_sec": 1880,
+ "motion_pct": 68.2,
+ "motion_runs": 98,
+ "hook_motion_sec": 86,
+ "runs_top10": [
+  {
+   "start": 2246,
+   "end": 2391,
+   "dur": 146
+  },
+  {
+   "start": 1373,
+   "end": 1477,
+   "dur": 105
+  },
+  {
+   "start": 910,
+   "end": 1013,
+   "dur": 104
+  },
+  {
+   "start": 1600,
+   "end": 1690,
+   "dur": 91
+  },
+  {
+   "start": 2435,
+   "end": 2522,
+   "dur": 88
+  },
+  {
+   "start": 2027,
+   "end": 2092,
+   "dur": 66
+  },
+  {
+   "start": 2673,
+   "end": 2721,
+   "dur": 49
+  },
+  {
+   "start": 1492,
+   "end": 1532,
+   "dur": 41
+  },
+  {
+   "start": 1553,
+   "end": 1592,
+   "dur": 40
+  },
+  {
+   "start": 1887,
+   "end": 1925,
+   "dur": 39
+  }
+ ]
+}

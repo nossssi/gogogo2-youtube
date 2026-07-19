@@ -6,8 +6,8 @@
   "tone": "차분한 옛이야기 나레이션, 담백하고 여운 있게",
 
   "image": {
-    "engine": "gemini",
-    "_comment_engine": "flow | gemini. gemini: 유료 API(나노바나나 1, 아래 gemini 블록 — 2026-07-19 사용자 지시로 채널 기본 전환, 일일 한도 없음). flow: labs.google 웹세션 무료(데몬+Chrome 필요, 계정당 ~15장/일). 엔진은 generate_image.py가 이 값을 읽어 자동 분기(호출부 무관). 무료로 돌아가려면 이 값만 flow로.",
+    "engine": "flow",
+    "_comment_engine": "flow | gemini. flow: labs.google 웹세션 무료 생성(데몬+Chrome 필요, banana 모델·2K 업스케일 — 2026-07-19 사용자 지시로 채널 기본 복귀). gemini: 유료 API 폴백(나노바나나 1, 아래 gemini 블록, 일일 한도 없음, 명시 opt-in+GEMINI_API_KEY 필요). 엔진은 generate_image.py가 이 값을 읽어 자동 분기(호출부 무관). 유료로 바꾸려면 이 값만 gemini로.",
     "flow": {
       "model": "banana",
       "_comment_model": "banana=Nano Banana(NARWHAL, 기본 — 일관성 banana-pro 동급·일일 쿼터 훨씬 느슨, A/B 실측 2026-07) | banana-pro=Nano Banana Pro(GEM_PIX_2, 쿼터 빡빡 ~15장/일) | imagen4=IMAGEN_3_5(일관성 약함)",
@@ -25,10 +25,10 @@
       "_comment": "engine=gemini(유료 API)일 때 이미지 모델. gemini-2.5-flash-image=Nano Banana 1(비용 기본, 2026-07-19 사용자 지정) | gemini-3-pro-image=Nano Banana Pro(2K, 더 비쌈)."
     },
     "veo": {
-      "engine": "gemini",
+      "engine": "flow",
       "model": "veo-3.1-fast-generate-preview",
       "resolution": "1080p",
-      "_comment": "훅 인트로 i2v 립싱크 클립(scripts/render/veo_hook.py, ⚠️유료). engine=gemini: Gemini API(GEMINI_API_KEY, 데몬 불필요, 기본) | flow: labs.google 웹세션(아래 flow 블록, 데몬+Chrome 필요).",
+      "_comment": "훅 인트로 i2v 립싱크 클립(scripts/render/veo_hook.py, ⚠️유료). engine=flow: labs.google 웹세션(아래 flow 블록 :3849 구독 레인, 데몬+Chrome 필요 — 2026-07-19 사용자 지시로 기본 복귀) | gemini: Gemini API(GEMINI_API_KEY, 데몬 불필요, 유료 폴백). model 필드는 gemini 전용, flow는 아래 flow.model 사용.",
       "flow": {
         "ports": [3849],
         "model": "veo-fast",
@@ -65,5 +65,16 @@
     "fps": 30,
     "width": 1920,
     "height": 1080
+  },
+
+  "capcut": {
+    "subtitle": {
+      "font_size": 7.0,
+      "text_color": "#FFFFFF",
+      "border_color": "#000000",
+      "border_width": 0.08,
+      "background_alpha": 0.0,
+      "_comment": "자막 스타일 기본값 = 흰 글자 + 검은 외곽선 + 배경 없음(alpha 0) + 폰트 7.0(코드 기본 5.0 대비 +2pt). capcut_export.py가 이 블록을 읽는다(settings.capcut.subtitle). 검은 배경으로 돌리려면 background_alpha를 0.7로."
+    }
   }
 }

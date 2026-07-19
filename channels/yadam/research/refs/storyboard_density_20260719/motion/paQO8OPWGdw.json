@@ -1,0 +1,60 @@
+{
+ "video": "paQO8OPWGdw.mp4",
+ "dur_sec": 5279,
+ "motion_sec": 372,
+ "motion_pct": 7.0,
+ "motion_runs": 19,
+ "hook_motion_sec": 113,
+ "runs_top10": [
+  {
+   "start": 189,
+   "end": 254,
+   "dur": 66
+  },
+  {
+   "start": 1,
+   "end": 51,
+   "dur": 51
+  },
+  {
+   "start": 82,
+   "end": 122,
+   "dur": 41
+  },
+  {
+   "start": 157,
+   "end": 186,
+   "dur": 30
+  },
+  {
+   "start": 371,
+   "end": 398,
+   "dur": 28
+  },
+  {
+   "start": 54,
+   "end": 79,
+   "dur": 26
+  },
+  {
+   "start": 305,
+   "end": 328,
+   "dur": 24
+  },
+  {
+   "start": 283,
+   "end": 302,
+   "dur": 20
+  },
+  {
+   "start": 267,
+   "end": 279,
+   "dur": 13
+  },
+  {
+   "start": 145,
+   "end": 154,
+   "dur": 10
+  }
+ ]
+}

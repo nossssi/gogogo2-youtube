@@ -1,0 +1,20 @@
+{
+ "video": "AGgz_1NJrAI.mp4",
+ "dur_sec": 4865,
+ "motion_sec": 43,
+ "motion_pct": 0.9,
+ "motion_runs": 2,
+ "hook_motion_sec": 37,
+ "runs_top10": [
+  {
+   "start": 2,
+   "end": 39,
+   "dur": 38
+  },
+  {
+   "start": 4279,
+   "end": 4283,
+   "dur": 5
+  }
+ ]
+}

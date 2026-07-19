@@ -1,0 +1,15 @@
+{
+ "video": "m3wm2GZ5Zgw.mp4",
+ "dur_sec": 4287,
+ "motion_sec": 43,
+ "motion_pct": 1.0,
+ "motion_runs": 1,
+ "hook_motion_sec": 42,
+ "runs_top10": [
+  {
+   "start": 1,
+   "end": 43,
+   "dur": 43
+  }
+ ]
+}

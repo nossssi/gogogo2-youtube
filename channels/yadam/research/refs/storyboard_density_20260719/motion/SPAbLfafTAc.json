@@ -1,0 +1,60 @@
+{
+ "video": "SPAbLfafTAc.mp4",
+ "dur_sec": 6526,
+ "motion_sec": 80,
+ "motion_pct": 1.2,
+ "motion_runs": 12,
+ "hook_motion_sec": 36,
+ "runs_top10": [
+  {
+   "start": 10,
+   "end": 23,
+   "dur": 14
+  },
+  {
+   "start": 2647,
+   "end": 2655,
+   "dur": 9
+  },
+  {
+   "start": 31,
+   "end": 38,
+   "dur": 8
+  },
+  {
+   "start": 48,
+   "end": 55,
+   "dur": 8
+  },
+  {
+   "start": 1,
+   "end": 6,
+   "dur": 6
+  },
+  {
+   "start": 41,
+   "end": 45,
+   "dur": 5
+  },
+  {
+   "start": 532,
+   "end": 536,
+   "dur": 5
+  },
+  {
+   "start": 1427,
+   "end": 1431,
+   "dur": 5
+  },
+  {
+   "start": 1700,
+   "end": 1704,
+   "dur": 5
+  },
+  {
+   "start": 2966,
+   "end": 2970,
+   "dur": 5
+  }
+ ]
+}

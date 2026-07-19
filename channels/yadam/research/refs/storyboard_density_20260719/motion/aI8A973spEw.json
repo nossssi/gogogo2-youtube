@@ -1,0 +1,30 @@
+{
+ "video": "aI8A973spEw.mp4",
+ "dur_sec": 4945,
+ "motion_sec": 36,
+ "motion_pct": 0.7,
+ "motion_runs": 4,
+ "hook_motion_sec": 28,
+ "runs_top10": [
+  {
+   "start": 6,
+   "end": 19,
+   "dur": 14
+  },
+  {
+   "start": 46,
+   "end": 56,
+   "dur": 11
+  },
+  {
+   "start": 37,
+   "end": 42,
+   "dur": 6
+  },
+  {
+   "start": 4013,
+   "end": 4017,
+   "dur": 5
+  }
+ ]
+}
